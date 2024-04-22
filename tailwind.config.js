@@ -20,6 +20,10 @@ module.exports = {
         'light': '#FDFDFD',
         'grey': '#DBDBDB', 
         'lightBlueGrey': '#E5E9ED'
+      },
+      fontFamily: {
+        sans: ['ff-scala-sans-pro', 'sans-serif'],
+        serif: ['arek', 'serif']
       }
     },
   },
