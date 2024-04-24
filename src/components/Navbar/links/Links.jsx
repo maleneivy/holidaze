@@ -1,7 +1,6 @@
-const { default: Link } = require("next/link");
+import Link from 'next/link';
 
-const Links = () => {
-
+const Links = ({ onLinkClick }) => {
     const links = [
         {
             title: "About",
@@ -14,10 +13,11 @@ const Links = () => {
     ];
 
     return (
-        <div>
-            {links.map((link=>(
-                <Link href={link.path} key={link.title}>{link.title}</Link>
-            )))}
+        <div className='flex flex-col pt-3'>
+            {links.map((link) => (
+                <Link href={link.path} key={link.title} onClick={onLinkClick} className="px-4 py-2 hover:underline">{link.title}
+                </Link>
+            ))}
         </div>
     );
 };

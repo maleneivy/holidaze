@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  @apply text-blue;
+  @apply bg-light;
+  max-width: 1290px;
+  margin: 0 auto;
+  height: 100vh;
+}
+
 h1 {
   @apply font-serif;
 }
