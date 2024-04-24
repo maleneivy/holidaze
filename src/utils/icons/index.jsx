@@ -1,11 +1,11 @@
-import { HiBars3BottomLeft, HiXMark } from "react-icons/hi2";
+import { HiMenuAlt3, HiOutlineX } from "react-icons/hi";
 
 export const Icon = ({ name, className }) => {
     const icons = {
-        bars: HiBars3BottomLeft,
-        close: HiXMark,
+        bars: HiMenuAlt3,
+        close: HiOutlineX,
     };
 
     const Component = icons[name];
-    return <Component className={className} />;
+    return <Component className={className} aria-label={name}/>;
 }; 
