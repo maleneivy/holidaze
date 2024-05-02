@@ -2,6 +2,7 @@
 
 import { fetchVenues } from '@/utils/api/api';
 import { useEffect, useState } from 'react';
+import VenueCard from '../VenueCard/VenueCard';
 
 const GetVenues = () => {
     const [venues, setVenues] = useState([]);
@@ -21,9 +22,9 @@ const GetVenues = () => {
     }, []);
 
     return (
-        <div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-4 mx-5">
             {venues.map(venue => (
-                <div key={venue.id}>{venue.name}</div>
+               <VenueCard key={venue.id} venue={venue}> </VenueCard>
             ))}
         </div>
     );
