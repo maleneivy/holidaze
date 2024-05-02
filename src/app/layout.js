@@ -11,10 +11,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" style={{ width: "100%", overflowX: "hidden" }}>
+      <body className={`${inter.className} overflow-x-hidden`}>
         <Navbar />
-        {children}</body>
+        {children}
+      </body>
     </html>
   );
 }

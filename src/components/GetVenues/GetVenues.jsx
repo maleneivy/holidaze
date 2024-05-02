@@ -11,7 +11,7 @@ const GetVenues = () => {
         const getVenues = async () => {
             try {
                 const data = await fetchVenues();
-                console.log(data)
+                console.log(data);
                 setVenues(data.data);
             } catch (error) {
                 console.error("Error fetching venues", error);
@@ -22,9 +22,9 @@ const GetVenues = () => {
     }, []);
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-4 px-5">
+        <div className="flex flex-wrap justify-center gap-4 my-4 px-5">
             {venues.map(venue => (
-               <VenueCard key={venue.id} venue={venue}> </VenueCard>
+                <VenueCard key={venue.id} venue={venue} />
             ))}
         </div>
     );

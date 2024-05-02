@@ -9,10 +9,6 @@ body {
   min-height: 100vh;
 }
 
-main, header, footer {
-  max-width: 1290px;
-}
-
 h1 {
   @apply font-serif;
 }
