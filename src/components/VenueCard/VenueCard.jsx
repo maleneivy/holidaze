@@ -1,15 +1,13 @@
+import ImageCarousel from "../ImageCarousel/ImageCarousel";
+
 const VenueCard = ({ venue }) => {
     const defaultImage = "/default-post-image.jpg";
 
-    const imageUrl = venue.media && venue.media.length > 0 ? venue.media[0].url : defaultImage;
-    const imageAlt = venue.media && venue.media.length > 0 && venue.media[0].alt ? venue.media[0].alt : "Venue image";
+    const images = venue.media && venue.media.length > 0 ? venue.media : [{ url: defaultImage, alt: "Default Image" }];
 
     return (
         <div className="w-full max-w-sm rounded shadow-lg">
-            <img className="w-full h-48 object-cover" src={imageUrl} alt={imageAlt} onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = defaultImage;
-            }}/>
+            <ImageCarousel images={images} />
             <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2">
                     <h3 className="text-base">
