@@ -2,6 +2,7 @@
 
 import ImageCarousel from '@/components/ImageCarousel/ImageCarousel';
 import OffersDisplay from '@/components/OffersDisplay/OffersDisplay';
+import { formatDate } from '@/utils/date';
 
 const ClientVenue = ({ images, venue }) => {
   console.log(venue);
@@ -40,8 +41,34 @@ const ClientVenue = ({ images, venue }) => {
           <p>Max guests: {venue.maxGuests}</p>
           <p>Owner: {venue.owner.name}</p>
         </div>
+        <OffersDisplay offers={venue.meta} />
         <div>
-          <OffersDisplay offers={venue.meta} />
+          <h2 className="font-bold">Description</h2>
+          {venue.description.length > 0 ? (
+            <p>{venue.description}</p>
+          ) : (
+            <p>There are no description provided for this venue.</p>
+          )}
+        </div>
+        <div>
+          <h2 className="font-bold">Calendar</h2>
+        </div>
+        <div>
+          <h2 className="font-bold">Location</h2>
+          {venue.location.address ? (
+            <p>{venue.location.address}</p>
+          ) : (
+            <p>No address provided</p>
+          )}
+          {venue.location.city ? (
+            <p>{venue.location.city}</p>
+          ) : (
+            <p>No city provided</p>
+          )}
+        </div>
+        <div>
+          <p>Created: {formatDate(venue.created)}</p>
+          <p>Last updated: {formatDate(venue.updated)}</p>
         </div>
       </div>
     </>
