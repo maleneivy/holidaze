@@ -1,9 +1,11 @@
 'use client';
 
 import ImageCarousel from '@/components/ImageCarousel/ImageCarousel';
+import OffersDisplay from '@/components/OffersDisplay/OffersDisplay';
 
 const ClientVenue = ({ images, venue }) => {
   console.log(venue);
+  console.log(venue.meta);
   return (
     <>
       <div className="md:hidden">
@@ -39,8 +41,7 @@ const ClientVenue = ({ images, venue }) => {
           <p>Owner: {venue.owner.name}</p>
         </div>
         <div>
-          <h2>Offers</h2>
-          <div></div>
+          <OffersDisplay offers={venue.meta} />
         </div>
       </div>
     </>
