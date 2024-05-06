@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import ImageCarousel from '../ImageCarousel/ImageCarousel';
+import BaseButton from '../BaseButton/BaseButton';
 
 const VenueCard = ({ venue }) => {
   const defaultImage = '/default-post-image.jpg';
@@ -23,10 +24,8 @@ const VenueCard = ({ venue }) => {
           {venue.price} NOK/night
         </p>
       </div>
-      <div>
-        <Link href={`/venue/${venue.id}`}>
-          <button>View</button>
-        </Link>
+      <div className="p-2 text-end">
+        <BaseButton href={`/venue/${venue.id}`}>View</BaseButton>
       </div>
     </div>
   );
