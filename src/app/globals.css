@@ -16,3 +16,8 @@ h1 {
 .logo {
   height: auto;
 }
+
+body {
+  max-width: 1290px;
+  margin: 0 auto;
+}
