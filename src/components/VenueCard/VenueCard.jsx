@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import ImageCarousel from '../ImageCarousel/ImageCarousel';
 
 const VenueCard = ({ venue }) => {
@@ -21,6 +22,11 @@ const VenueCard = ({ venue }) => {
         <p className="inline-block rounded-full text-sm">
           {venue.price} NOK/night
         </p>
+      </div>
+      <div>
+        <Link href={`/venue/${venue.id}`}>
+          <button>View</button>
+        </Link>
       </div>
     </div>
   );

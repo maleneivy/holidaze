@@ -8,3 +8,12 @@ export const fetchVenues = async () => {
   }
   return await response.json();
 };
+
+// Fetch single venue
+export const fetchSingleVenue = async (slug) => {
+  const response = await fetch(`${API_URL}/holidaze/venues/${slug}`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch venue');
+  }
+  return await response.json();
+};

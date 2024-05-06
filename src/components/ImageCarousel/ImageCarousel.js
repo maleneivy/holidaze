@@ -25,11 +25,11 @@ const ImageCarousel = ({ images }) => {
     : '/default-post-image.jpg';
 
   return (
-    <div className="relative w-full max-w-sm">
+    <div className="relative w-full max-w-lg sm:max-w-md lg:max-w-2xl">
       {images.length > 1 && (
         <button
           onClick={prevSlide}
-          className="absolute left-2 top-1/2 z-10 -translate-y-1/2 transform"
+          className="absolute left-2 top-1/2 z-10 -translate-y-1/2 transform rounded-full"
         >
           <Icon
             name="prev"
@@ -37,7 +37,7 @@ const ImageCarousel = ({ images }) => {
           />
         </button>
       )}
-      <div className="relative h-60 w-full overflow-hidden">
+      <div className="relative h-48 w-full overflow-hidden sm:h-64 lg:h-96">
         <img
           src={imageUrl}
           alt={images[currentIndex]?.alt || `Slide ${currentIndex + 1}`}
@@ -59,7 +59,7 @@ const ImageCarousel = ({ images }) => {
       {images.length > 1 && (
         <button
           onClick={nextSlide}
-          className="absolute right-2 top-1/2 z-10 -translate-y-1/2 transform"
+          className="absolute right-2 top-1/2 z-10 -translate-y-1/2 transform rounded-full"
         >
           <Icon
             name="next"

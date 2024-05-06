@@ -16,7 +16,7 @@ const DropDownMenu = () => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative z-50">
       <button onClick={toggleMenu} className="p-2">
         {isOpen ? (
           <Icon name="close" className="h-10 w-10 text-blue" />
