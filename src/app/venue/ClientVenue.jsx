@@ -3,6 +3,7 @@
 import ImageCarousel from '@/components/ImageCarousel/ImageCarousel';
 
 const ClientVenue = ({ images, venue }) => {
+  console.log(venue);
   return (
     <>
       <div className="md:hidden">
@@ -27,8 +28,20 @@ const ClientVenue = ({ images, venue }) => {
         </div>
       )}
       <div className="mt-8">
-        <h2 className="text-2xl font-bold">{venue.name}</h2>
-        <p>{venue.description}</p>
+        <div>
+          <h1 className="font-bold">{venue.name}</h1>
+        </div>
+        <div>
+          <p>
+            {venue.location.country}, {venue.location.city}
+          </p>
+          <p>Max guests: {venue.maxGuests}</p>
+          <p>Owner: {venue.owner.name}</p>
+        </div>
+        <div>
+          <h2>Offers</h2>
+          <div></div>
+        </div>
       </div>
     </>
   );

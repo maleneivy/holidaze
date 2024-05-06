@@ -11,7 +11,9 @@ export const fetchVenues = async () => {
 
 // Fetch single venue
 export const fetchSingleVenue = async (slug) => {
-  const response = await fetch(`${API_URL}/holidaze/venues/${slug}`);
+  const response = await fetch(
+    `${API_URL}/holidaze/venues/${slug}?_owner=true`
+  );
   if (!response.ok) {
     throw new Error('Failed to fetch venue');
   }
