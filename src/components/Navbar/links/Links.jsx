@@ -10,6 +10,10 @@ const Links = ({ onLinkClick }) => {
       title: 'Contact',
       path: '/contact',
     },
+    {
+      title: 'Login',
+      path: '/login',
+    },
   ];
 
   return (

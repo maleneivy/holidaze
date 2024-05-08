@@ -1,4 +1,4 @@
-const API_URL = 'https://v2.api.noroff.dev';
+export const API_URL = 'https://v2.api.noroff.dev';
 
 // Fetch venues
 export const fetchVenues = async () => {

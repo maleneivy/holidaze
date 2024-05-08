@@ -3,6 +3,9 @@ module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
     extend: {
+      spacing: {
+        128: '32rem',
+      },
       borderRadius: {
         rounded: '9px',
       },
@@ -22,6 +25,7 @@ module.exports = {
         light: '#FDFDFD',
         grey: '#DBDBDB',
         lightBlueGrey: '#E5E9ED',
+        inputText: '#647381',
       },
       backgroundImage: {
         gradientYellow: 'linear-gradient(360deg, #FCEDD5, #FCCD81)',
