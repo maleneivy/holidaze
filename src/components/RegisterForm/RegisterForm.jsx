@@ -1,12 +1,10 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import BaseButton from '../BaseButton/BaseButton';
 import Link from 'next/link';
 
 function RegistrationForm() {
-  const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -16,6 +14,7 @@ function RegistrationForm() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -29,6 +28,7 @@ function RegistrationForm() {
     event.preventDefault();
     setLoading(true);
     setError('');
+    setSuccess('');
     const form = event.target;
 
     const formData = {
@@ -47,14 +47,16 @@ function RegistrationForm() {
 
       if (!response.ok) {
         const errorResponse = await response.json();
-        console.error('Failed to register:', errorResponse.message);
-        throw new Error('Failed to register: ' + errorResponse.message);
+        console.error('Failed to register:', errorResponse.errors[0].message);
+        throw new Error(
+          'Failed to register: ' + errorResponse.errors[0].message
+        );
       }
 
       const result = await response.json();
       console.log('Registration successful:', result);
       setFormData({ name: '', email: '', password: '', venueManager: false });
-      router.push('/profile');
+      setSuccess('Registration was successfull. You may now log in');
       setLoading(false);
     } catch (error) {
       console.error('Registration failed:', error);
@@ -69,8 +71,11 @@ function RegistrationForm() {
 
   return (
     <>
-      <h1>Register</h1>
-      <form onSubmit={handleSubmit} className="flex max-w-96 flex-col">
+      <h1 className="mx-2">Register</h1>
+      <form
+        onSubmit={handleSubmit}
+        className="md:w-0-auto mx-2 flex w-72 flex-col"
+      >
         <input
           type="text"
           name="name"
@@ -104,7 +109,7 @@ function RegistrationForm() {
             name="venueManager"
             checked={formData.venueManager}
             onChange={handleChange}
-            className="sr-only" // Hides the checkbox visually but remains accessible
+            className="sr-only"
           />
           <span
             className={`inline-block size-5 rounded ${formData.venueManager ? 'bg-blue-500' : 'bg-grey'}`}
@@ -128,7 +133,10 @@ function RegistrationForm() {
           >
             {loading ? 'Registering...' : 'Register'}
           </BaseButton>
-          {error && <p className="text-red-500">{error}</p>}
+        </div>
+        <div className="mt-3">
+          {error && <p className="text-red">{error}</p>}
+          {success && <p className="rounded bg-lightGreen p-1">{success}</p>}
         </div>
       </form>
     </>
