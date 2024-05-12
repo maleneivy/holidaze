@@ -40,7 +40,8 @@ function LoginForm() {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.message || 'Failed to login');
+        console.log(result);
+        throw new Error(result.errors[0].message || 'Failed to login');
       }
 
       console.log('Login successful:', result);
@@ -90,7 +91,9 @@ function LoginForm() {
           >
             {loading ? 'Logging in...' : 'Login'}
           </BaseButton>
-          {error && <p className="text-red-500">{error}</p>}
+        </div>
+        <div className="mt-3">
+          {error && <p className="text-red">{error}</p>}
         </div>
       </form>
     </>
