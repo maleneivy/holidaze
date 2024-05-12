@@ -1,6 +1,7 @@
 import { Inter } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar/Navbar';
+import { AuthProvider } from './lib/authProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -11,11 +12,13 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" style={{ width: '100%', overflowX: 'hidden' }}>
-      <body className={`${inter.className} overflow-x-hidden`}>
-        <Navbar />
-        {children}
-      </body>
-    </html>
+    <AuthProvider>
+      <html lang="en" style={{ width: '100%', overflowX: 'hidden' }}>
+        <body className={`${inter.className} overflow-x-hidden`}>
+          <Navbar />
+          {children}
+        </body>
+      </html>
+    </AuthProvider>
   );
 }
