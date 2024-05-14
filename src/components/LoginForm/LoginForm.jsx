@@ -28,26 +28,34 @@ function LoginForm() {
     setError('');
 
     try {
-      const response = await fetch(`https://v2.api.noroff.dev/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
-      });
+      // Login.
+      const loginResponse = await login(formData.email, formData.password);
+      const account = await loginResponse.json();
 
-      const result = await response.json();
-
-      if (!response.ok) {
-        console.log(result);
-        throw new Error(result.errors[0].message || 'Failed to login');
+      if (!loginResponse.ok) {
+        console.log(account);
+        throw new Error(account.errors[0].message || 'Failed to login');
       }
 
-      console.log('Login successful:', result);
-      localStorage.setItem('token', result.data.accessToken);
+      console.log('Login successful:', account);
+      localStorage.setItem('token', account.data.accessToken);
+      localStorage.setItem('userName', account.data.name);
+
+      // Fetch API key.
+      const apiKeyResponse = await createApiKey();
+      const apiKey = await apiKeyResponse.json();
+
+      if (!apiKeyResponse.ok) {
+        console.log(apiKey);
+        throw new Error(apiKey.errors[0].message || 'Failed create API key');
+      }
+
+      localStorage.setItem('apiKey', apiKey.data.key);
+
+      // Navigate to profile.
+      const name = localStorage.getItem('userName');
       setLoading(false);
-      router.push('/profile');
+      router.push(`/profile/${name}`);
     } catch (error) {
       setError(error.message);
       setLoading(false);
@@ -101,3 +109,30 @@ function LoginForm() {
 }
 
 export default LoginForm;
+
+const login = async (email, password) => {
+  const response = await fetch(`https://v2.api.noroff.dev/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: email,
+      password: password,
+    }),
+  });
+
+  return response;
+};
+
+const createApiKey = async () => {
+  const response = await fetch(
+    `https://v2.api.noroff.dev/auth/create-api-key`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    }
+  );
+
+  return response;
+};
