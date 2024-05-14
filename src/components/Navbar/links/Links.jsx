@@ -11,6 +11,8 @@ const Links = ({ onLinkClick }) => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     setAuth({ token: null });
+    setAuth({ userName: null });
+    setAuth({ apiKey: null });
     router.push('/login');
     onLinkClick();
   };

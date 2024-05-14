@@ -1,5 +1,4 @@
 'use client';
-
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
@@ -50,7 +49,7 @@ const ProfilePage = ({ params }) => {
           className="absolute inset-0 -z-10 h-36 w-full object-cover md:h-48"
         />
       </div>
-      <div className="max-w-128 mx-auto my-20 flex flex-col">
+      <div className="mx-auto my-20 flex max-w-128 flex-col">
         <div className="">
           {profile && (
             <>
@@ -64,9 +63,18 @@ const ProfilePage = ({ params }) => {
                   Edit avatar
                 </Link>
               </div>
-              <div className="my-6 ml-4">
+              <div className="mx-4 my-6">
                 <p>{profile.name}</p>
                 <p>{profile.email}</p>
+              </div>
+              <hr className="mx-4 border-lightBlueGrey" />
+              <div className="mx-4">
+                <h2>My upcoming bookings</h2>
+                <div className="my-4 flex rounded p-2 shadow-md">
+                  <p>First image of booking</p>
+                  <div className="border-l-2 border-lightBlueGrey"></div>
+                  <p>Info about booking</p>
+                </div>
               </div>
             </>
           )}
