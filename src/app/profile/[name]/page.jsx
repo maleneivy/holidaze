@@ -1,6 +1,6 @@
 'use client';
 import EditProfileModal from '@/components/Profile/EditProfileModal';
-import Link from 'next/link';
+import CreateVenueModal from '@/components/Profile/Venue/CreateVenueModal';
 import React, { useEffect, useState } from 'react';
 
 const ProfilePage = ({ params }) => {
@@ -8,6 +8,7 @@ const ProfilePage = ({ params }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isEditing, setIsEditing] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
 
   useEffect(() => {
     const setupProfile = async () => {
@@ -42,14 +43,24 @@ const ProfilePage = ({ params }) => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
-  // Edit profile data
-  const handleEdit = (e) => {
-    e.preventDefault();
+  const handleEdit = () => {
+    document.body.classList.add('body-lock');
     setIsEditing(true);
   };
 
-  const handleClose = () => {
+  const handleCloseEdit = () => {
+    document.body.classList.remove('body-lock');
     setIsEditing(false);
+  };
+
+  const handleCreateVenue = () => {
+    document.body.classList.add('body-lock');
+    setIsCreating(true);
+  };
+
+  const handleCloseCreateVenue = () => {
+    document.body.classList.remove('body-lock');
+    setIsCreating(false);
   };
 
   const handleSave = async (updatedProfile) => {
@@ -77,16 +88,14 @@ const ProfilePage = ({ params }) => {
     }
   };
 
+  const handleSaveNewVenue = async (newVenueData) => {
+    console.log(newVenueData);
+    setIsCreating(false);
+  };
+
   return (
     <>
-      {isEditing && (
-        <EditProfileModal
-          profile={profile}
-          onClose={handleClose}
-          onSave={handleSave}
-        />
-      )}
-      <div className={isEditing ? 'blur-sm' : ''}>
+      <div className={isEditing || isCreating ? 'blur-sm' : ''}>
         <div className="relative">
           <img
             src={profile.banner?.url}
@@ -104,17 +113,23 @@ const ProfilePage = ({ params }) => {
                     alt={profile.avatar?.alt || 'Profile avatar'}
                     className="object-fit sm:size-42 size-36 rounded-full md:size-48"
                   />
-                  <div className="items-between my-4 flex">
+                  <div className="my-4 flex">
                     <div>
                       <a href="#" onClick={handleEdit} className="underline">
                         Edit Profile
                       </a>
                     </div>
-                    <div>
-                      <Link href="" className="underline">
-                        New venue (VM)
-                      </Link>
-                    </div>
+                    {profile.venueManager && (
+                      <div className="ml-10">
+                        <a
+                          href="#"
+                          onClick={handleCreateVenue}
+                          className="underline"
+                        >
+                          New venue (VM)
+                        </a>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="mx-4 my-6">
@@ -158,6 +173,19 @@ const ProfilePage = ({ params }) => {
           </div>
         </div>
       </div>
+      {isEditing && (
+        <EditProfileModal
+          profile={profile}
+          onClose={handleCloseEdit}
+          onSave={handleSave}
+        />
+      )}
+      {isCreating && (
+        <CreateVenueModal
+          onClose={handleCloseCreateVenue}
+          onSave={handleSaveNewVenue}
+        />
+      )}
     </>
   );
 };
