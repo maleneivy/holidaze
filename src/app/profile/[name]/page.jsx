@@ -59,23 +59,55 @@ const ProfilePage = ({ params }) => {
                   alt={profile.avatar?.alt || 'Profile avatar'}
                   className="object-fit sm:size-42 size-36 rounded-full md:size-48"
                 />
-                <Link href="" className="underline">
-                  Edit avatar
-                </Link>
+                <div className="items-between my-4 flex">
+                  <div>
+                    <Link href="" className="underline">
+                      Edit avatar
+                    </Link>
+                  </div>
+                  <div>
+                    <Link href="" className="underline">
+                      New venue (VM)
+                    </Link>
+                  </div>
+                </div>
               </div>
               <div className="mx-4 my-6">
                 <p>{profile.name}</p>
                 <p>{profile.email}</p>
+                <h3 className="mb-2 mt-4">Bio</h3>
+                <p>{profile.bio ? profile.bio : 'No bio provided'}</p>
+              </div>
+              <hr className="mx-4 border-lightBlueGrey" />
+              <div className="mx-4 flex flex-col">
+                <h2 className="my-4">My venues(venuemanager)</h2>
+                <div className="my-4 flex flex-col rounded p-2 shadow-md">
+                  <p>First image of venue</p>
+                  <div className="border-l-2 border-lightBlueGrey"></div>
+                  <h3>Name of venue</h3>
+                  <p>Price</p>
+                  <p>Max Guests</p>
+                  <p>Meta: wifi, pets ++..</p>
+                  <div className="my-2">
+                    <h3>Bookings</h3>
+                    <div className="rounded shadow-md">
+                      <p>dd.mm.yy-dd.mm.yy</p>
+                      <p>name(venueManger)</p>
+                      <hr className="mx-4 border-lightBlueGrey" />
+                    </div>
+                  </div>
+                </div>
               </div>
               <hr className="mx-4 border-lightBlueGrey" />
               <div className="mx-4">
-                <h2>My upcoming bookings</h2>
-                <div className="my-4 flex rounded p-2 shadow-md">
+                <h2 className="my-4">My upcoming bookings</h2>
+                <div className="my-4 flex flex-col rounded p-4 shadow-md sm:flex-row">
                   <p>First image of booking</p>
                   <div className="border-l-2 border-lightBlueGrey"></div>
                   <p>Info about booking</p>
                 </div>
               </div>
+              <hr className="mx-4 border-lightBlueGrey" />
             </>
           )}
         </div>
