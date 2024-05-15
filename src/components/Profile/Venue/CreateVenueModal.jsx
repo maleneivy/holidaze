@@ -140,21 +140,27 @@ const CreateVenueModal = ({ onClose, onSave }) => {
           />
           <h2>Images</h2>
           {formData.images.map((image, index) => (
-            <div key={index} className="my-2 flex items-center justify-between">
-              <img
-                src={image.url}
-                alt={image.alt}
-                className="h-20 w-20 rounded object-cover"
-              />
-              <BaseButton
-                onClick={() => handleRemoveImage(index)}
-                className="ml-2"
+            <div className="flex flex-col">
+              <div
+                key={index}
+                className="my-2 flex items-center justify-between"
               >
-                Remove
-              </BaseButton>
+                <img
+                  src={image.url}
+                  alt={image.alt}
+                  className="h-20 w-20 rounded object-cover"
+                />
+                <BaseButton
+                  onClick={() => handleRemoveImage(index)}
+                  className="ml-2"
+                >
+                  Remove
+                </BaseButton>
+              </div>
+              <hr />
             </div>
           ))}
-          <div className="flex space-x-2">
+          <div className="flex flex-col space-x-2 rounded border-lightBlueGrey p-2 shadow sm:flex-row">
             <input
               type="url"
               name="url"
