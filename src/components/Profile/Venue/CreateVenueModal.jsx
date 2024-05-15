@@ -36,23 +36,33 @@ const CreateVenueModal = ({ onClose, onSave }) => {
 
   const handleAddImage = () => {
     if (formData.currentImage.url && formData.currentImage.alt) {
-      const newImage = {
-        url: formData.currentImage.url,
-        alt: formData.currentImage.alt,
+      const img = new Image();
+      img.onload = () => {
+        setFormData((prev) => ({
+          ...prev,
+          images: [
+            ...prev.images,
+            { url: formData.currentImage.url, alt: formData.currentImage.alt },
+          ],
+          currentImage: { url: '', alt: '' },
+        }));
       };
-      setFormData((prev) => ({
-        ...prev,
-        images: [...prev.images, newImage],
-        currentImage: { url: '', alt: '' },
-      }));
+      img.onerror = () => {
+        alert(
+          'Invalid image URL. Please enter a valid URL that loads an image.'
+        );
+      };
+      img.src = formData.currentImage.url; // This starts the image loading check
     } else {
       alert('Please enter both URL and alt text for the image.');
     }
   };
 
   const handleRemoveImage = (index) => {
-    const newImages = formData.images.filter((_, i) => i !== index);
-    setFormData((prev) => ({ ...prev, images: newImages }));
+    setFormData((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index),
+    }));
   };
 
   const handleImageChange = (e) => {
@@ -65,19 +75,26 @@ const CreateVenueModal = ({ onClose, onSave }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const { currentImage, ...submitData } = formData; // Remove temporary image state before submitting
     const venueData = {
-      ...formData,
-      images: formData.images,
-      price: parseInt(formData.price),
-      maxGuests: parseInt(formData.maxGuests),
+      ...submitData,
+      price: parseInt(submitData.price),
+      maxGuests: parseInt(submitData.maxGuests),
+      media: submitData.images.map((img) => ({ url: img.url, alt: img.alt })),
+      meta: {
+        wifi: submitData.wifi,
+        parking: submitData.parking,
+        breakfast: submitData.breakfast,
+        pets: submitData.pets,
+      },
       location: {
-        address: formData.address,
-        city: formData.city,
-        zip: formData.zip,
-        country: formData.country,
-        continent: formData.continent,
-        lat: parseFloat(formData.lat),
-        lng: parseFloat(formData.lng),
+        address: submitData.address,
+        city: submitData.city,
+        zip: submitData.zip,
+        country: submitData.country,
+        continent: submitData.continent,
+        lat: parseFloat(submitData.lat),
+        lng: parseFloat(submitData.lng),
       },
     };
 
@@ -106,9 +123,7 @@ const CreateVenueModal = ({ onClose, onSave }) => {
     }
   };
 
-  const inputStyles = `
-  my-2 rounded p-2 shadow border border-lightBlueGrey
-  `;
+  const inputStyles = 'my-2 rounded p-2 shadow border border-lightBlueGrey';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-blue bg-opacity-50">
@@ -140,24 +155,18 @@ const CreateVenueModal = ({ onClose, onSave }) => {
           />
           <h2>Images</h2>
           {formData.images.map((image, index) => (
-            <div className="flex flex-col">
-              <div
-                key={index}
-                className="my-2 flex items-center justify-between"
+            <div key={index} className="my-2 flex items-center justify-between">
+              <img
+                src={image.url}
+                alt={image.alt}
+                className="h-20 w-20 rounded object-cover"
+              />
+              <BaseButton
+                onClick={() => handleRemoveImage(index)}
+                className="ml-2"
               >
-                <img
-                  src={image.url}
-                  alt={image.alt}
-                  className="h-20 w-20 rounded object-cover"
-                />
-                <BaseButton
-                  onClick={() => handleRemoveImage(index)}
-                  className="ml-2"
-                >
-                  Remove
-                </BaseButton>
-              </div>
-              <hr />
+                Remove
+              </BaseButton>
             </div>
           ))}
           <div className="flex flex-col space-x-2 rounded border-lightBlueGrey p-2 shadow sm:flex-row">
@@ -179,7 +188,7 @@ const CreateVenueModal = ({ onClose, onSave }) => {
             />
             <BaseButton
               onClick={handleAddImage}
-              className="bg-blue-600 hover:bg-blue-700 rounded px-4 py-2"
+              className="bg-blue-600 hover:bg-blue-700 rounded px-2 py-2"
             >
               Save Image
             </BaseButton>
