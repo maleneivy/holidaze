@@ -1,9 +1,12 @@
-'use client';
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import BaseButton from '@/components/BaseButton/BaseButton';
 
-const CreateVenueModal = ({ onClose, onSave }) => {
+const EditVenueModal = ({
+  venue,
+  onClose,
+  onSaveComplete,
+  onDeleteComplete,
+}) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -23,6 +26,35 @@ const CreateVenueModal = ({ onClose, onSave }) => {
     lng: '',
     currentImage: { url: '', alt: '' },
   });
+  const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (venue) {
+      setFormData({
+        name: venue.name || '',
+        description: venue.description || '',
+        images: venue.media || [],
+        price: venue.price || '',
+        maxGuests: venue.maxGuests || '',
+        wifi: venue.meta?.wifi || false,
+        parking: venue.meta?.parking || false,
+        breakfast: venue.meta?.breakfast || false,
+        pets: venue.meta?.pets || false,
+        address: venue.location?.address || '',
+        city: venue.location?.city || '',
+        zip: venue.location?.zip || '',
+        country: venue.location?.country || '',
+        continent: venue.location?.continent || '',
+        lat: venue.location?.lat || '',
+        lng: venue.location?.lng || '',
+        currentImage: { url: '', alt: '' },
+      });
+    }
+  }, [venue]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,6 +64,98 @@ const CreateVenueModal = ({ onClose, onSave }) => {
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
     setFormData((prev) => ({ ...prev, [name]: checked }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSaving(true);
+    setError('');
+
+    const submitData = {
+      ...formData,
+      price: parseInt(formData.price, 10),
+      maxGuests: parseInt(formData.maxGuests, 10),
+      media: formData.images.map((img) => ({ url: img.url, alt: img.alt })),
+      meta: {
+        wifi: formData.wifi,
+        parking: formData.parking,
+        breakfast: formData.breakfast,
+        pets: formData.pets,
+      },
+      location: {
+        address: formData.address,
+        city: formData.city,
+        zip: formData.zip,
+        country: formData.country,
+        continent: formData.continent,
+        lat: parseFloat(formData.lat),
+        lng: parseFloat(formData.lng),
+      },
+    };
+
+    try {
+      const response = await fetch(
+        `https://v2.api.noroff.dev/holidaze/venues/${venue.id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'X-Noroff-API-Key': localStorage.getItem('apiKey'),
+          },
+          body: JSON.stringify(submitData),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to save venue changes');
+      }
+
+      const result = await response.json();
+      onSaveComplete(result.data);
+      console.log(result.data);
+      setIsSaving(false);
+      setSuccessMessage('Venue updated successfully!');
+      setTimeout(() => setSuccessMessage(''), 10000);
+    } catch (error) {
+      setError(`Update failed: ${error.message}`);
+      setIsSaving(false);
+      console.error('Failed to update venue:', error);
+    }
+  };
+
+  const confirmDelete = () => {
+    setShowConfirmDelete(true);
+  };
+
+  const handleDelete = async () => {
+    setShowConfirmDelete(false);
+    setIsDeleting(true);
+    setError('');
+    try {
+      const response = await fetch(
+        `https://v2.api.noroff.dev/holidaze/venues/${venue.id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'X-Noroff-API-Key': localStorage.getItem('apiKey'),
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to delete venue');
+      }
+
+      onDeleteComplete(venue.id);
+    } catch (error) {
+      setError(error.message);
+      console.error('Delete error:', error);
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const handleAddImage = () => {
@@ -73,56 +197,6 @@ const CreateVenueModal = ({ onClose, onSave }) => {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const { currentImage, ...submitData } = formData;
-    const venueData = {
-      ...submitData,
-      price: parseInt(submitData.price),
-      maxGuests: parseInt(submitData.maxGuests),
-      media: submitData.images.map((img) => ({ url: img.url, alt: img.alt })),
-      meta: {
-        wifi: submitData.wifi,
-        parking: submitData.parking,
-        breakfast: submitData.breakfast,
-        pets: submitData.pets,
-      },
-      location: {
-        address: submitData.address,
-        city: submitData.city,
-        zip: submitData.zip,
-        country: submitData.country,
-        continent: submitData.continent,
-        lat: parseFloat(submitData.lat),
-        lng: parseFloat(submitData.lng),
-      },
-    };
-
-    try {
-      const response = await fetch(
-        'https://v2.api.noroff.dev/holidaze/venues',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'X-Noroff-API-Key': localStorage.getItem('apiKey'),
-          },
-          body: JSON.stringify(venueData),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to create venue');
-      }
-      const result = await response.json();
-      onSave(result.data);
-      onClose();
-    } catch (error) {
-      console.error('Error creating venue:', error);
-    }
-  };
-
   const inputStyles = 'my-2 rounded p-2 shadow border border-lightBlueGrey';
 
   return (
@@ -135,7 +209,8 @@ const CreateVenueModal = ({ onClose, onSave }) => {
           &times;
         </span>
         <form onSubmit={handleSubmit} className="mx-10 flex flex-col space-y-4">
-          <h2>Create New Venue</h2>
+          <h2>Edit Venue</h2>
+          <p>{venue.id}</p>
           <input
             type="text"
             name="name"
@@ -305,18 +380,41 @@ const CreateVenueModal = ({ onClose, onSave }) => {
             placeholder="Longitude"
             className={inputStyles}
           />
-          <div className="mt-6 flex justify-end">
-            <BaseButton
-              type="submit"
-              className="bg-blue-600 hover:bg-blue-700 rounded px-6 py-2 font-semibold"
-            >
-              Save Venue
-            </BaseButton>
-          </div>
+          <BaseButton
+            type="submit"
+            className="bg-blue-600 hover:bg-blue-700 rounded px-6 py-2 font-semibold"
+            disabled={isSaving}
+          >
+            {isSaving ? 'Saving...' : 'Save Changes'}
+          </BaseButton>
+          {successMessage && <p className="bg-lightGreen">{successMessage}</p>}
+          <BaseButton
+            type="button"
+            onClick={confirmDelete}
+            className="rounded bg-red px-6 py-2 font-semibold hover:bg-lightRed"
+            disabled={isDeleting}
+          >
+            Delete Venue
+          </BaseButton>
+          {showConfirmDelete && (
+            <>
+              <p>Are you sure you want to delete this venue?</p>
+              <BaseButton
+                onClick={handleDelete}
+                className="bg-red hover:bg-lightRed"
+              >
+                Yes, Delete
+              </BaseButton>
+              <BaseButton onClick={() => setShowConfirmDelete(false)}>
+                Cancel
+              </BaseButton>
+            </>
+          )}
+          {error && <p className="text-red">{error}</p>}
         </form>
       </div>
     </div>
   );
 };
 
-export default CreateVenueModal;
+export default EditVenueModal;
