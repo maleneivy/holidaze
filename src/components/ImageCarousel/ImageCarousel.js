@@ -1,28 +1,43 @@
 'use client';
 
 import { Icon } from '@/utils/icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const ImageCarousel = ({ images }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  useEffect(() => {
+    if (images.length === 0) {
+      setCurrentIndex(-1);
+    } else if (currentIndex === -1 || currentIndex >= images.length) {
+      setCurrentIndex(0);
+    }
+  }, [images, currentIndex]);
+
   const prevSlide = () => {
-    const index = currentIndex === 0 ? images.length - 1 : currentIndex - 1;
-    setCurrentIndex(index);
+    if (images.length > 0) {
+      const index = currentIndex === 0 ? images.length - 1 : currentIndex - 1;
+      setCurrentIndex(index);
+    }
   };
 
   const nextSlide = () => {
-    const index = currentIndex === images.length - 1 ? 0 : currentIndex + 1;
-    setCurrentIndex(index);
+    if (images.length > 0) {
+      const index = currentIndex === images.length - 1 ? 0 : currentIndex + 1;
+      setCurrentIndex(index);
+    }
   };
 
   const goToSlide = (index) => {
-    setCurrentIndex(index);
+    if (index >= 0 && index < images.length) {
+      setCurrentIndex(index);
+    }
   };
 
-  const imageUrl = images[currentIndex]?.url
-    ? images[currentIndex].url
-    : '/default-post-image.jpg';
+  const imageUrl =
+    currentIndex >= 0 && images[currentIndex]
+      ? images[currentIndex].url
+      : '/default-post-image.jpg';
 
   return (
     <div className="relative w-full max-w-lg sm:max-w-md lg:max-w-2xl">
@@ -40,7 +55,9 @@ const ImageCarousel = ({ images }) => {
       <div className="relative h-48 w-full overflow-hidden sm:h-64 lg:h-96">
         <img
           src={imageUrl}
-          alt={images[currentIndex]?.alt || `Slide ${currentIndex + 1}`}
+          alt={
+            images[currentIndex] ? images[currentIndex].alt : 'Default image'
+          }
           className="h-full w-full object-cover"
           onError={(e) => (e.target.src = '/default-post-image.jpg')}
         />

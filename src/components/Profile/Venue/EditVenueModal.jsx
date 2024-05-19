@@ -188,10 +188,10 @@ const EditVenueModal = ({
   };
 
   const handleRemoveImage = (index) => {
-    setFormData((prev) => ({
-      ...prev,
-      images: prev.images.filter((_, i) => i !== index),
-    }));
+    setFormData((prev) => {
+      const updatedImages = prev.images.filter((_, i) => i !== index);
+      return { ...prev, images: updatedImages };
+    });
   };
 
   const handleImageChange = (e) => {
