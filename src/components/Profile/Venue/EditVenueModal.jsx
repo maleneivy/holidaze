@@ -37,7 +37,7 @@ const EditVenueModal = ({
       setFormData({
         name: venue.name || '',
         description: venue.description || '',
-        images: venue.media || [],
+        images: venue.media && venue.media.length > 0 ? venue.media : [],
         price: venue.price || '',
         maxGuests: venue.maxGuests || '',
         wifi: venue.meta?.wifi || false,
@@ -158,7 +158,12 @@ const EditVenueModal = ({
     }
   };
 
-  const handleAddImage = () => {
+  const handleImageAddition = (event) => {
+    event.preventDefault();
+    if (formData.images.length >= 10) {
+      alert('You cannot add more than 10 images.');
+      return;
+    }
     if (formData.currentImage.url && formData.currentImage.alt) {
       const img = new Image();
       img.onload = () => {
@@ -229,21 +234,32 @@ const EditVenueModal = ({
             className={inputStyles}
           />
           <h2>Images</h2>
-          {formData.images.map((image, index) => (
-            <div key={index} className="my-2 flex items-center justify-between">
-              <img
-                src={image.url}
-                alt={image.alt}
-                className="h-20 w-20 rounded object-cover"
-              />
-              <BaseButton
-                onClick={() => handleRemoveImage(index)}
-                className="ml-2"
+          {formData.images.length > 0 ? (
+            formData.images.map((image, index) => (
+              <div
+                key={index}
+                className="my-2 flex items-center justify-between"
               >
-                Remove
-              </BaseButton>
-            </div>
-          ))}
+                <img
+                  src={image.url}
+                  alt={image.alt}
+                  className="h-20 w-20 rounded object-cover"
+                />
+                <BaseButton
+                  onClick={() => handleRemoveImage(index)}
+                  className="ml-2"
+                >
+                  Remove
+                </BaseButton>
+              </div>
+            ))
+          ) : (
+            <img
+              src="/default-post-image.jpg"
+              alt="Default Venue Image"
+              className="h-20 w-20 rounded object-cover"
+            />
+          )}
           <div className="flex flex-col space-x-2 rounded border-lightBlueGrey p-2 shadow sm:flex-row">
             <input
               type="url"
@@ -262,10 +278,12 @@ const EditVenueModal = ({
               className={inputStyles}
             />
             <BaseButton
-              onClick={handleAddImage}
+              type="button"
+              onClick={handleImageAddition}
               className="bg-blue-600 hover:bg-blue-700 rounded px-2 py-2"
+              disabled={formData.images.length >= 10}
             >
-              Save Image
+              Add Image
             </BaseButton>
           </div>
           <input

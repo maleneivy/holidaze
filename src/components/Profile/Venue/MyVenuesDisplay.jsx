@@ -72,7 +72,7 @@ const MyVenuesDisplay = ({ profile }) => {
               images={
                 venue.media || [
                   {
-                    url: '/default-venue-image.jpg',
+                    url: '/default-post-image.jpg',
                     alt: 'Default Venue Image',
                   },
                 ]
