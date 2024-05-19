@@ -1,6 +1,7 @@
 'use client';
 import EditProfileModal from '@/components/Profile/EditProfileModal';
 import CreateVenueModal from '@/components/Profile/Venue/CreateVenueModal';
+import MyVenuesDisplay from '@/components/Profile/Venue/MyVenuesDisplay';
 import React, { useEffect, useState } from 'react';
 
 const ProfilePage = ({ params }) => {
@@ -138,24 +139,8 @@ const ProfilePage = ({ params }) => {
                 <p>{profile.bio ? profile.bio : 'No bio provided'}</p>
               </div>
               <hr className="mx-4 border-lightBlueGrey" />
-              <div className="mx-4 flex flex-col">
-                <h2 className="my-4">My venues(venuemanager)</h2>
-                <div className="my-4 flex flex-col rounded p-2 shadow-md">
-                  <p>First image of venue</p>
-                  <div className="border-l-2 border-lightBlueGrey"></div>
-                  <h3>Name of venue</h3>
-                  <p>Price</p>
-                  <p>Max Guests</p>
-                  <p>Meta: wifi, pets ++..</p>
-                  <div className="my-2">
-                    <h3>Bookings</h3>
-                    <div className="rounded shadow-md">
-                      <p>dd.mm.yy-dd.mm.yy</p>
-                      <p>name(venueManger)</p>
-                      <hr className="mx-4 border-lightBlueGrey" />
-                    </div>
-                  </div>
-                </div>
+              <div>
+                <MyVenuesDisplay profile={profile} />
               </div>
               <hr className="mx-4 border-lightBlueGrey" />
               <div className="mx-4">
