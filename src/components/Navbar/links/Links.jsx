@@ -1,56 +1,40 @@
-import { useContext } from 'react';
+'use client';
+
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { AuthContext } from '@/app/lib/authProvider';
+import { useAuth } from '@/app/lib/authProvider';
 
 const Links = ({ onLinkClick }) => {
-  const { auth, setAuth } = useContext(AuthContext);
+  const { auth, logout } = useAuth();
   const router = useRouter();
-  const isLoggedIn = !!auth.token;
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    setAuth({ token: null });
-    setAuth({ userName: null });
-    setAuth({ apiKey: null });
+    logout();
     router.push('/login');
-    onLinkClick();
+    if (onLinkClick) {
+      onLinkClick();
+    }
   };
 
-  const links = [
-    { title: 'About', path: '/about' },
-    { title: 'Contact', path: '/contact' },
-    {
-      title: isLoggedIn ? 'Logout' : 'Login',
-      path: isLoggedIn ? '#' : '/login',
-    },
-  ];
+  const isLoggedIn = !!auth.token;
 
   return (
     <div className="flex flex-col pt-3">
-      {links.map((link, index) => {
-        if (link.title === 'Logout') {
-          return (
-            <button
-              key={index}
-              onClick={handleLogout}
-              className="text px-4 py-2 hover:underline"
-            >
-              {link.title}
-            </button>
-          );
-        }
-        return (
-          <Link
-            href={link.path}
-            key={index}
-            onClick={onLinkClick}
-            className="px-4 py-2 hover:underline"
-          >
-            {link.title}
-          </Link>
-        );
-      })}
+      <Link href="/about" className="px-4 py-2 hover:underline">
+        About
+      </Link>
+      <Link href="/contact" className="px-4 py-2 hover:underline">
+        Contact
+      </Link>
+      {isLoggedIn ? (
+        <button onClick={handleLogout} className="px-4 py-2 hover:underline">
+          Logout
+        </button>
+      ) : (
+        <Link href="/login" className="px-4 py-2 hover:underline">
+          Login
+        </Link>
+      )}
     </div>
   );
 };

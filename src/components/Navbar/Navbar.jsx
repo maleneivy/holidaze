@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import DropDownMenu from './dropdown/DropDownMenu';
+import ProfileLink from './links/ProfileLink';
 
 const Navbar = () => {
   return (
@@ -17,7 +18,10 @@ const Navbar = () => {
           />
         </Link>
       </div>
-      <DropDownMenu />
+      <div className="flex items-center">
+        <ProfileLink />
+        <DropDownMenu />
+      </div>
     </header>
   );
 };

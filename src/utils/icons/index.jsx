@@ -3,6 +3,7 @@ import {
   HiOutlineX,
   HiArrowCircleRight,
   HiArrowCircleLeft,
+  HiUser,
 } from 'react-icons/hi';
 
 export const Icon = ({ name, className }) => {
@@ -11,6 +12,7 @@ export const Icon = ({ name, className }) => {
     close: HiOutlineX,
     next: HiArrowCircleRight,
     prev: HiArrowCircleLeft,
+    user: HiUser,
   };
 
   const Component = icons[name];
