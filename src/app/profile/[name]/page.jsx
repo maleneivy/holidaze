@@ -94,6 +94,13 @@ const ProfilePage = ({ params }) => {
     setIsCreating(false);
   };
 
+  const addNewVenue = (newVenue) => {
+    setProfile((prevProfile) => ({
+      ...prevProfile,
+      venues: [...prevProfile.venues, newVenue],
+    }));
+  };
+
   return (
     <>
       <div className="relative">
@@ -171,6 +178,7 @@ const ProfilePage = ({ params }) => {
         <CreateVenueModal
           onClose={handleCloseCreateVenue}
           onSave={handleSaveNewVenue}
+          onAddVenue={addNewVenue}
         />
       )}
     </>

@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import BaseButton from '@/components/BaseButton/BaseButton';
 
-const CreateVenueModal = ({ onClose, onSave }) => {
+const CreateVenueModal = ({ onClose, onSave, onAddVenue }) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -119,6 +119,7 @@ const CreateVenueModal = ({ onClose, onSave }) => {
       }
       const result = await response.json();
       onSave(result.data);
+      onAddVenue(result.data);
       onClose();
     } catch (error) {
       console.error('Error creating venue:', error);
