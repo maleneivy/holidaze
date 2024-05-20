@@ -406,30 +406,34 @@ const EditVenueModal = ({
             {isSaving ? 'Saving...' : 'Save Changes'}
           </BaseButton>
           {successMessage && <p className="bg-lightGreen">{successMessage}</p>}
+        </form>
+        <div className="my-4">
           <BaseButton
             type="button"
             onClick={confirmDelete}
-            className="rounded bg-red px-6 py-2 font-semibold hover:bg-lightRed"
+            className="rounded px-6 py-2 font-semibold"
             disabled={isDeleting}
           >
             Delete Venue
           </BaseButton>
-          {showConfirmDelete && (
-            <>
-              <p>Are you sure you want to delete this venue?</p>
-              <BaseButton
-                onClick={handleDelete}
-                className="bg-red hover:bg-lightRed"
-              >
-                Yes, Delete
-              </BaseButton>
-              <BaseButton onClick={() => setShowConfirmDelete(false)}>
-                Cancel
-              </BaseButton>
-            </>
-          )}
-          {error && <p className="text-red">{error}</p>}
-        </form>
+          <div className="flex items-center justify-between">
+            {showConfirmDelete && (
+              <>
+                <p>Are you sure you want to delete this venue?</p>
+                <BaseButton
+                  onClick={handleDelete}
+                  className="bg-red hover:bg-lightRed"
+                >
+                  Yes, Delete
+                </BaseButton>
+                <BaseButton onClick={() => setShowConfirmDelete(false)}>
+                  Cancel
+                </BaseButton>
+              </>
+            )}
+            {error && <p className="text-red">{error}</p>}
+          </div>
+        </div>
       </div>
     </div>
   );

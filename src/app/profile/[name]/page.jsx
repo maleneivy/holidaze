@@ -123,7 +123,10 @@ const ProfilePage = ({ params }) => {
                     <div className="ml-10">
                       <a
                         href="#"
-                        onClick={handleCreateVenue}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleCreateVenue();
+                        }}
                         className="underline"
                       >
                         New venue (VM)

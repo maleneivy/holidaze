@@ -98,6 +98,8 @@ const CreateVenueModal = ({ onClose, onSave }) => {
       },
     };
 
+    console.log('Submitting venue data:', venueData);
+
     try {
       const response = await fetch(
         'https://v2.api.noroff.dev/holidaze/venues',

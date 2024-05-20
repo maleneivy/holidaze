@@ -53,6 +53,7 @@ const MyVenuesDisplay = ({ profile }) => {
   };
 
   const handleDeleteComplete = (venueId) => {
+    console.log('Deleting venue with ID:', venueId);
     const filteredVenues = venues.filter((venue) => venue.id !== venueId);
     setVenues(filteredVenues);
     handleModalClose();
@@ -121,7 +122,7 @@ const MyVenuesDisplay = ({ profile }) => {
           venue={currentVenue}
           onClose={handleModalClose}
           onSaveComplete={handleSaveComplete}
-          onDelete={handleDeleteComplete}
+          onDeleteComplete={handleDeleteComplete}
         />
       )}
     </div>
