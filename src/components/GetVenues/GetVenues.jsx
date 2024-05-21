@@ -1,33 +1,61 @@
-"use client"
+'use client';
 
 import { fetchVenues } from '@/utils/api/api';
 import { useEffect, useState } from 'react';
 import VenueCard from '../VenueCard/VenueCard';
+import SearchComponent from '../Search/Search';
 
 const GetVenues = () => {
-    const [venues, setVenues] = useState([]);
+  const [venues, setVenues] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
 
-    useEffect(() => {
-        const getVenues = async () => {
-            try {
-                const data = await fetchVenues();
-                console.log(data);
-                setVenues(data.data);
-            } catch (error) {
-                console.error("Error fetching venues", error);
-            }
-        };
+  useEffect(() => {
+    const getVenues = async () => {
+      try {
+        const data = await fetchVenues();
+        setVenues(data.data);
+      } catch (error) {
+        console.error('Error fetching venues', error);
+      }
+    };
 
-        getVenues();
-    }, []);
+    getVenues();
+  }, []);
 
-    return (
-        <div className="flex flex-wrap justify-center gap-4 my-4 px-5">
-            {venues.map(venue => (
-                <VenueCard key={venue.id} venue={venue} />
-            ))}
-        </div>
-    );
+  const handleSearchResults = (results) => {
+    setSearchResults(results);
+    setIsSearching(true);
+  };
+
+  const handleSearchClear = () => {
+    setSearchResults([]);
+    setIsSearching(false);
+  };
+
+  const resultsToShow = isSearching
+    ? searchResults.length > 0
+      ? searchResults
+      : []
+    : venues;
+
+  return (
+    <div>
+      <SearchComponent
+        onSearchResults={handleSearchResults}
+        onSearchClear={handleSearchClear}
+      />
+      <div className="my-4 flex flex-wrap justify-center gap-4 px-5">
+        {resultsToShow.length > 0 ? (
+          resultsToShow.map((venue) => (
+            <VenueCard key={venue.id} venue={venue} />
+          ))
+        ) : (
+          <div className="w-full text-center">No results</div>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default GetVenues;

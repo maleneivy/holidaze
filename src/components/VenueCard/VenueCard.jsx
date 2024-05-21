@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import ImageCarousel from '../ImageCarousel/ImageCarousel';
 import BaseButton from '../BaseButton/BaseButton';
 
