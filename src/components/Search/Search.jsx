@@ -15,10 +15,11 @@ const SearchComponent = ({ onSearchResults, onSearchClear }) => {
           `${API_URL}/holidaze/venues/search?q=${query}`
         );
         const data = await response.json();
-        onSearchResults(data.data);
+        console.log(data);
+        onSearchResults(query);
       } catch (error) {
         console.error('Error searching venues', error);
-        onSearchResults([]);
+        onSearchResults('');
       }
     } else {
       onSearchClear();
