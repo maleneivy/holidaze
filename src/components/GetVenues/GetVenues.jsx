@@ -4,7 +4,7 @@ import VenueCard from '../VenueCard/VenueCard';
 import { fetchVenues } from '@/utils/api/api';
 import SearchComponent from '../Search/Search';
 import DateFilter from '../Filters/DateFilter';
-import MaxGuestsFilter from '../Filters/MaxGuestsFilter';
+import FilterDropdown from '../Filters/dropdown/FilterDropdown';
 import { API_URL } from '@/utils/api/api';
 
 const GetVenues = () => {
@@ -14,6 +14,12 @@ const GetVenues = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [maxGuests, setMaxGuests] = useState(1);
+  const [meta, setMeta] = useState({
+    wifi: false,
+    parking: false,
+    breakfast: false,
+    pets: false,
+  });
 
   useEffect(() => {
     const getVenues = async () => {
@@ -31,7 +37,7 @@ const GetVenues = () => {
 
   useEffect(() => {
     filterVenues();
-  }, [searchTerm, startDate, endDate, maxGuests, venues]);
+  }, [searchTerm, startDate, endDate, maxGuests, meta, venues]);
 
   const handleSearchChange = async (term) => {
     setSearchTerm(term);
@@ -42,8 +48,9 @@ const GetVenues = () => {
     setEndDate(end);
   };
 
-  const handleGuestsChange = async (count) => {
-    setMaxGuests(count);
+  const handleFilterChange = (filters) => {
+    setMaxGuests(filters.guestCount);
+    setMeta(filters.meta);
   };
 
   const filterVenues = async () => {
@@ -81,6 +88,19 @@ const GetVenues = () => {
       filtered = filtered.filter((venue) => venue.maxGuests >= maxGuests);
     }
 
+    if (meta.wifi) {
+      filtered = filtered.filter((venue) => venue.meta.wifi);
+    }
+    if (meta.parking) {
+      filtered = filtered.filter((venue) => venue.meta.parking);
+    }
+    if (meta.breakfast) {
+      filtered = filtered.filter((venue) => venue.meta.breakfast);
+    }
+    if (meta.pets) {
+      filtered = filtered.filter((venue) => venue.meta.pets);
+    }
+
     setFilteredVenues(filtered);
   };
 
@@ -91,7 +111,7 @@ const GetVenues = () => {
         onSearchClear={() => handleSearchChange('')}
       />
       <DateFilter onDateChange={handleDateChange} />
-      <MaxGuestsFilter onGuestsChange={handleGuestsChange} />
+      <FilterDropdown onFilterChange={handleFilterChange} />
       <div className="my-4 flex flex-wrap justify-center gap-4 px-5">
         {filteredVenues.length > 0 ? (
           filteredVenues.map((venue) => (

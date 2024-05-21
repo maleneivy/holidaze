@@ -8,6 +8,7 @@ import {
   HiCalendar,
   HiMinus,
   HiPlus,
+  HiAdjustments,
 } from 'react-icons/hi';
 
 export const Icon = ({ name, className }) => {
@@ -21,6 +22,7 @@ export const Icon = ({ name, className }) => {
     calendar: HiCalendar,
     minus: HiMinus,
     plus: HiPlus,
+    filter: HiAdjustments,
   };
 
   const Component = icons[name];
