@@ -4,6 +4,7 @@ import VenueCard from '../VenueCard/VenueCard';
 import { fetchVenues } from '@/utils/api/api';
 import SearchComponent from '../Search/Search';
 import DateFilter from '../Filters/DateFilter';
+import MaxGuestsFilter from '../Filters/MaxGuestsFilter';
 import { API_URL } from '@/utils/api/api';
 
 const GetVenues = () => {
@@ -12,6 +13,7 @@ const GetVenues = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [maxGuests, setMaxGuests] = useState(1);
 
   useEffect(() => {
     const getVenues = async () => {
@@ -27,44 +29,56 @@ const GetVenues = () => {
     getVenues();
   }, []);
 
+  useEffect(() => {
+    filterVenues();
+  }, [searchTerm, startDate, endDate, maxGuests, venues]);
+
   const handleSearchChange = async (term) => {
     setSearchTerm(term);
-    await filterVenues(term, startDate, endDate);
   };
 
   const handleDateChange = async (start, end) => {
     setStartDate(start);
     setEndDate(end);
-    await filterVenues(searchTerm, start, end);
   };
 
-  const filterVenues = async (search, start, end) => {
+  const handleGuestsChange = async (count) => {
+    setMaxGuests(count);
+  };
+
+  const filterVenues = async () => {
     let filtered = venues;
 
-    if (typeof search === 'string' && search.trim() !== '') {
+    if (searchTerm.trim() !== '') {
       try {
         const response = await fetch(
-          `${API_URL}/holidaze/venues/search?q=${search}&_bookings=true`
+          `${API_URL}/holidaze/venues/search?q=${searchTerm}&_bookings=true`
         );
         const data = await response.json();
         filtered = data.data;
+        console.log(filtered);
       } catch (error) {
         console.error('Error searching venues', error);
         filtered = [];
       }
     }
 
-    if (start && end) {
+    if (startDate && endDate) {
       filtered = filtered.filter((venue) => {
-        if (!venue.bookings || venue.bookings.length === 0) {
-          return true;
+        if (venue.bookings && venue.bookings.length > 0) {
+          const isBooked = venue.bookings.some((booking) => {
+            const bookingStart = new Date(booking.dateFrom);
+            const bookingEnd = new Date(booking.dateTo);
+            return startDate <= bookingEnd && endDate >= bookingStart;
+          });
+          return !isBooked;
         }
-        return venue.bookings.every((booking) => {
-          const bookingStart = new Date(booking.dateFrom);
-          const bookingEnd = new Date(booking.dateTo);
-          return end < bookingStart || start > bookingEnd;
-        });
+        return true;
       });
+    }
+
+    if (maxGuests) {
+      filtered = filtered.filter((venue) => venue.maxGuests >= maxGuests);
     }
 
     setFilteredVenues(filtered);
@@ -77,6 +91,7 @@ const GetVenues = () => {
         onSearchClear={() => handleSearchChange('')}
       />
       <DateFilter onDateChange={handleDateChange} />
+      <MaxGuestsFilter onGuestsChange={handleGuestsChange} />
       <div className="my-4 flex flex-wrap justify-center gap-4 px-5">
         {filteredVenues.length > 0 ? (
           filteredVenues.map((venue) => (

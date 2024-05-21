@@ -1,6 +1,5 @@
 'use client';
 import React, { useState } from 'react';
-import { API_URL } from '@/utils/api/api';
 
 const SearchComponent = ({ onSearchResults, onSearchClear }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -10,17 +9,7 @@ const SearchComponent = ({ onSearchResults, onSearchClear }) => {
     setSearchTerm(query);
 
     if (query.trim() !== '') {
-      try {
-        const response = await fetch(
-          `${API_URL}/holidaze/venues/search?q=${query}`
-        );
-        const data = await response.json();
-        console.log(data);
-        onSearchResults(query);
-      } catch (error) {
-        console.error('Error searching venues', error);
-        onSearchResults('');
-      }
+      onSearchResults(query);
     } else {
       onSearchClear();
     }
