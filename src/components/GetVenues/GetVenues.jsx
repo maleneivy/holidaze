@@ -14,7 +14,10 @@ const GetVenues = () => {
     const getVenues = async () => {
       try {
         const data = await fetchVenues();
-        setVenues(data.data);
+        const sortedVenues = data.data.sort(
+          (a, b) => new Date(b.created) - new Date(a.created)
+        );
+        setVenues(sortedVenues);
       } catch (error) {
         console.error('Error fetching venues', error);
       }
@@ -24,7 +27,10 @@ const GetVenues = () => {
   }, []);
 
   const handleSearchResults = (results) => {
-    setSearchResults(results);
+    const sortedResults = results.sort(
+      (a, b) => new Date(b.created) - new Date(a.created)
+    );
+    setSearchResults(sortedResults);
     setIsSearching(true);
   };
 
