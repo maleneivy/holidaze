@@ -3,32 +3,38 @@ import ImageCarousel from '@/components/ImageCarousel/ImageCarousel';
 import { Icon } from '@/utils/icons';
 import EditVenueModal from './EditVenueModal';
 import BaseButton from '@/components/BaseButton/BaseButton';
+import { API_URL } from '@/utils/api/api';
 
 const MyVenuesDisplay = ({ profile }) => {
   const [venues, setVenues] = useState([]);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [currentVenue, setCurrentVenue] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const bookingsPerPage = 3;
 
   useEffect(() => {
+    const fetchBookingsForVenue = async (venueId) => {
+      const response = await fetch(
+        `${API_URL}/holidaze/venues/${venueId}?_bookings=true`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'X-Noroff-API-Key': localStorage.getItem('apiKey'),
+          },
+        }
+      );
+      const data = await response.json();
+      return data.data.bookings || [];
+    };
+
     const fetchBookings = async () => {
       if (profile && profile.venues) {
-        const bookingsResponse = await fetch(
-          'https://v2.api.noroff.dev/holidaze/bookings',
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`,
-              'X-Noroff-API-Key': localStorage.getItem('apiKey'),
-            },
-          }
+        const updatedVenues = await Promise.all(
+          profile.venues.map(async (venue) => {
+            const bookings = await fetchBookingsForVenue(venue.id);
+            return { ...venue, bookings };
+          })
         );
-        const bookingsData = await bookingsResponse.json();
-        const bookings = bookingsData.data;
-
-        const updatedVenues = profile.venues.map((venue) => ({
-          ...venue,
-          bookings: bookings.filter((booking) => booking.venueId === venue.id),
-        }));
-
         setVenues(updatedVenues);
       }
     };
@@ -60,6 +66,62 @@ const MyVenuesDisplay = ({ profile }) => {
     handleModalClose();
   };
 
+  const getFutureBookings = (bookings) => {
+    const now = new Date();
+    const nowDateOnly = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    );
+    const futureBookings = bookings.filter((booking) => {
+      const dateFrom = new Date(booking.dateFrom);
+      const dateTo = new Date(booking.dateTo);
+
+      if (dateFrom > dateTo) {
+        console.error(
+          `Booking ID ${booking.id} has dateFrom after dateTo. Correcting dates.`
+        );
+        [booking.dateFrom, booking.dateTo] = [booking.dateTo, booking.dateFrom];
+      }
+
+      const bookingDateToDateOnly = new Date(
+        dateTo.getFullYear(),
+        dateTo.getMonth(),
+        dateTo.getDate()
+      );
+      const isFutureBooking = bookingDateToDateOnly >= nowDateOnly;
+      return isFutureBooking;
+    });
+
+    const uniqueBookings = [];
+    const bookingMap = new Map();
+    for (const booking of futureBookings) {
+      const key = `${booking.dateFrom}-${booking.dateTo}-${booking.customer.name}`;
+      if (!bookingMap.has(key)) {
+        bookingMap.set(key, true);
+        uniqueBookings.push(booking);
+      }
+    }
+
+    return uniqueBookings.sort(
+      (a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)
+    );
+  };
+
+  const totalBookings = venues.reduce(
+    (total, venue) => total + getFutureBookings(venue.bookings).length,
+    0
+  );
+  const totalPages = Math.ceil(totalBookings / bookingsPerPage);
+
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+  };
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
   if (!venues.length) {
     return <p>You have no venues</p>;
   }
@@ -67,60 +129,96 @@ const MyVenuesDisplay = ({ profile }) => {
   return (
     <div className="mx-4 flex flex-col">
       <h2 className="my-4">My Venues (Venue Manager)</h2>
-      {venues.map((venue, index) => (
-        <div key={index} className="my-4 flex flex-col rounded p-2 shadow-md">
-          <div className="relative">
-            <ImageCarousel
-              images={
-                venue.media || [
-                  {
-                    url: '/default-post-image.jpg',
-                    alt: 'Default Venue Image',
-                  },
-                ]
-              }
-            />
-            <button
-              onClick={() => openEditModal(venue)}
-              className="absolute right-4 top-4 rounded bg-light p-2 shadow-lg hover:bg-creme sm:right-8"
-            >
-              <Icon name="pencil" className="text-4xl text-primary" />
-            </button>
-          </div>
-          <div className="border-lightBlueGrey p-4">
-            <h3>{venue.name}</h3>
-            <p>Price: {venue.price}</p>
-            <p>Max Guests: {venue.maxGuests}</p>
-            <p>
-              Offering:{' '}
-              {(venue.meta &&
-                Object.entries(venue.meta)
-                  .filter(([_key, value]) => value)
-                  .map(([key]) => key.replace(/_/g, ' '))
-                  .join(', ')) ||
-                'This place has no special offers'}
-            </p>
-            <div className="my-2 rounded border border-lightBlueGrey bg-creme p-4 shadow-inner">
-              <h2>Bookings</h2>
-              {venue.bookings && venue.bookings.length > 0 ? (
-                <ul>
-                  {venue.bookings.map((booking) => (
-                    <li key={booking.id}>
-                      From: {booking.dateFrom} - To: {booking.dateTo} | Guests:{' '}
-                      {booking.guests}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>No bookings for this venue.</p>
-              )}
+      {venues.map((venue, index) => {
+        const futureBookings = getFutureBookings(venue.bookings);
+        const startIndex = (currentPage - 1) * bookingsPerPage;
+        const endIndex = startIndex + bookingsPerPage;
+        const currentBookings = futureBookings.slice(startIndex, endIndex);
+
+        return (
+          <div key={index} className="my-4 flex flex-col rounded p-2 shadow-md">
+            <div className="relative">
+              <ImageCarousel
+                images={
+                  venue.media || [
+                    {
+                      url: '/default-post-image.jpg',
+                      alt: 'Default Venue Image',
+                    },
+                  ]
+                }
+              />
+              <button
+                onClick={() => openEditModal(venue)}
+                className="absolute right-4 top-4 rounded bg-light p-2 shadow-lg hover:bg-creme sm:right-8"
+              >
+                <Icon name="pencil" className="text-4xl text-primary" />
+              </button>
             </div>
-            <div className="text-end">
-              <BaseButton href={`/venue/${venue.id}`}>View</BaseButton>
+            <div className="border-lightBlueGrey p-4">
+              <h3>{venue.name}</h3>
+              <p>Price: {venue.price}</p>
+              <p>Max Guests: {venue.maxGuests}</p>
+              <p>
+                Offering:{' '}
+                {(venue.meta &&
+                  Object.entries(venue.meta)
+                    .filter(([_key, value]) => value)
+                    .map(([key]) => key.replace(/_/g, ' '))
+                    .join(', ')) ||
+                  'This place has no special offers'}
+              </p>
+              <div className="my-2 rounded border border-lightBlueGrey bg-creme p-4 shadow-inner">
+                <h2 className="mb-2">Bookings</h2>
+                {currentBookings.length > 0 ? (
+                  <ul>
+                    {currentBookings.map((booking) => (
+                      <li key={booking.id}>
+                        <div className="flex flex-col">
+                          <div className="my-2">
+                            Dates:{' '}
+                            {new Date(booking.dateFrom).toLocaleDateString()} -{' '}
+                            {new Date(booking.dateTo).toLocaleDateString()}
+                          </div>
+                          <div>Guests: {booking.guests}</div>
+                          <div>Booked by: {booking.customer.name}</div>
+                        </div>
+                        <hr className="my-2" />
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No bookings for this venue.</p>
+                )}
+                {totalPages > 1 && (
+                  <div className="mt-2 flex items-center justify-between">
+                    <button
+                      onClick={handlePreviousPage}
+                      disabled={currentPage === 1}
+                      className="rounded bg-gray-300 px-4 py-2 disabled:opacity-50"
+                    >
+                      Previous
+                    </button>
+                    <span>
+                      Page {currentPage} of {totalPages}
+                    </span>
+                    <button
+                      onClick={handleNextPage}
+                      disabled={currentPage === totalPages}
+                      className="rounded bg-gray-300 px-4 py-2 disabled:opacity-50"
+                    >
+                      Next
+                    </button>
+                  </div>
+                )}
+              </div>
+              <div className="text-end">
+                <BaseButton href={`/venue/${venue.id}`}>View</BaseButton>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
       {editModalVisible && currentVenue && (
         <EditVenueModal
           venue={currentVenue}

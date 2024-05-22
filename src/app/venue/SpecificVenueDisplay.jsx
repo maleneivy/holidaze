@@ -9,17 +9,21 @@ import { formatDate } from '@/utils/date';
 import { useAuth } from '../lib/authProvider';
 import { API_URL } from '@/utils/api/api';
 import BookingConfirmation from '@/components/Booking/BookingConfirmation';
+import BaseButton from '@/components/BaseButton/BaseButton';
 
 const SpecificVenueDisplay = ({ images, venue }) => {
   const { auth } = useAuth();
   const [selectedDates, setSelectedDates] = useState([null, null]);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [bookings, setBookings] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const bookingsPerPage = 3;
+  const isOwner = auth.userName === venue.owner.name;
 
   const fetchLatestBookings = async () => {
     try {
       const response = await fetch(
-        `${API_URL}/holidaze/venues/${venue.id}?_bookings=true`,
+        `${API_URL}/holidaze/venues/${venue.id}?_bookings=true&_customer=true`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -87,6 +91,45 @@ const SpecificVenueDisplay = ({ images, venue }) => {
     await fetchLatestBookings();
   };
 
+  const getSortedBookings = (bookings) => {
+    return bookings
+      .map((booking) => {
+        if (new Date(booking.dateFrom) > new Date(booking.dateTo)) {
+          const temp = booking.dateFrom;
+          booking.dateFrom = booking.dateTo;
+          booking.dateTo = temp;
+        }
+        return booking;
+      })
+      .sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
+  };
+
+  const calculateTotalPrice = (dateFrom, dateTo, pricePerNight) => {
+    const startDate = new Date(dateFrom);
+    const endDate = new Date(dateTo);
+    const timeDiff = endDate - startDate;
+    const numberOfNights = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1;
+    return numberOfNights * pricePerNight;
+  };
+
+  const totalBookings = getSortedBookings(bookings).length;
+  const totalPages = Math.ceil(totalBookings / bookingsPerPage);
+
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+  };
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  const startIndex = (currentPage - 1) * bookingsPerPage;
+  const endIndex = startIndex + bookingsPerPage;
+  const currentBookings = getSortedBookings(bookings).slice(
+    startIndex,
+    endIndex
+  );
+
   return (
     <>
       {showConfirmation && (
@@ -139,13 +182,64 @@ const SpecificVenueDisplay = ({ images, venue }) => {
             bookings={bookings}
             onDateChange={handleDateChange}
           />
-          {auth.token ? (
+          {auth.token && !isOwner ? (
             <BookingForm
               onBookingSubmit={handleBookingSubmit}
               maxGuests={venue.maxGuests}
               pricePerNight={venue.price}
               selectedDates={selectedDates}
             />
+          ) : isOwner ? (
+            <div>
+              <h3 className="mt-4 font-bold">Bookings</h3>
+              {currentBookings.length > 0 ? (
+                <ul>
+                  {currentBookings.map((booking) => (
+                    <li key={booking.id}>
+                      <p>
+                        Dates: {new Date(booking.dateFrom).toLocaleDateString()}{' '}
+                        - {new Date(booking.dateTo).toLocaleDateString()}
+                      </p>
+                      <p>Guests: {booking.guests}</p>
+                      <p>Booked by: {booking.customer.name}</p>
+                      <p>
+                        Total Price:{' '}
+                        {calculateTotalPrice(
+                          booking.dateFrom,
+                          booking.dateTo,
+                          venue.price
+                        )}{' '}
+                        NOK
+                      </p>
+                      <hr className="my-2" />
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No bookings yet.</p>
+              )}
+              {totalPages > 1 && (
+                <div className="mt-2 flex items-center justify-between">
+                  <BaseButton
+                    type="button"
+                    onClick={handlePreviousPage}
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </BaseButton>
+                  <span>
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <BaseButton
+                    type="button"
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                  </BaseButton>
+                </div>
+              )}
+            </div>
           ) : (
             <p>Please log in to make a booking.</p>
           )}

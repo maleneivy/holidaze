@@ -5,6 +5,7 @@ import MyVenuesDisplay from '@/components/Profile/Venue/MyVenuesDisplay';
 import BookingCalendar from '@/components/Booking/BookingCalendar';
 import React, { useEffect, useState } from 'react';
 import { API_URL } from '@/utils/api/api';
+import Link from 'next/link';
 
 const ProfilePage = ({ params }) => {
   const [profile, setProfile] = useState(null);
@@ -61,6 +62,7 @@ const ProfilePage = ({ params }) => {
         throw new Error('Failed to fetch profile');
       }
       const profileData = await profileResponse.json();
+      console.log(profileData);
       setProfile(profileData.data);
     } catch (error) {
       console.error('Error fetching profile:', error);
@@ -265,7 +267,11 @@ const ProfilePage = ({ params }) => {
                           />
                         </div>
                         <div className="ml-4">
-                          <p className="font-bold">{booking.venue.name}</p>
+                          <Link href={`/venue/${booking.venue.id}`}>
+                            <p className="underline hover:font-bold">
+                              {booking.venue.name}
+                            </p>
+                          </Link>
                           <p>
                             {booking.venue.location.city},{' '}
                             {booking.venue.location.country}
@@ -279,7 +285,7 @@ const ProfilePage = ({ params }) => {
                           <div className="mt-2">
                             <button
                               onClick={() => handleEditBooking(booking)}
-                              className="mr-2 rounded px-4 py-1 text-blue underline focus:bg-yellow-100"
+                              className="mr-2 rounded px-4 py-1 text-blue underline hover:font-bold focus:bg-yellow-100"
                             >
                               Edit
                             </button>
