@@ -29,3 +29,9 @@ h1 {
   max-height: 90vh;
   overflow-y: auto;
 }
+
+.booked {
+  background-color: red !important;
+  color: white !important;
+  pointer-events: none;
+}

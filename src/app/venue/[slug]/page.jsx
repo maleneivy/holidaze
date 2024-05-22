@@ -1,5 +1,5 @@
 import { fetchSingleVenue } from '@/utils/api/api';
-import ClientVenue from '../ClientVenue';
+import SpecificVenueDisplay from '../SpecificVenueDisplay';
 
 const SpecificVenuePage = async ({ params }) => {
   const { slug } = params;
@@ -14,7 +14,7 @@ const SpecificVenuePage = async ({ params }) => {
 
   return (
     <div className="mx-auto my-5 max-w-4xl">
-      <ClientVenue images={images} venue={venue} />
+      <SpecificVenueDisplay images={images} venue={venue} />
     </div>
   );
 };
