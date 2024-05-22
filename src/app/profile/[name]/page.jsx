@@ -2,7 +2,9 @@
 import EditProfileModal from '@/components/Profile/EditProfileModal';
 import CreateVenueModal from '@/components/Profile/Venue/CreateVenueModal';
 import MyVenuesDisplay from '@/components/Profile/Venue/MyVenuesDisplay';
+import BookingCalendar from '@/components/Booking/BookingCalendar';
 import React, { useEffect, useState } from 'react';
+import { API_URL } from '@/utils/api/api';
 
 const ProfilePage = ({ params }) => {
   const [profile, setProfile] = useState(null);
@@ -10,12 +12,14 @@ const ProfilePage = ({ params }) => {
   const [error, setError] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+  const [isEditingBooking, setIsEditingBooking] = useState(null);
+  const [selectedDates, setSelectedDates] = useState([null, null]);
 
   useEffect(() => {
     const setupProfile = async () => {
       try {
         const profileResponse = await fetch(
-          `https://v2.api.noroff.dev/holidaze/profiles/${params.name}?_venues=true&_bookings=true`,
+          `${API_URL}/holidaze/profiles/${params.name}?_venues=true&_bookings=true`,
           {
             method: 'GET',
             headers: {
@@ -41,8 +45,28 @@ const ProfilePage = ({ params }) => {
     setupProfile();
   }, [params.name]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  const fetchProfile = async () => {
+    try {
+      const profileResponse = await fetch(
+        `${API_URL}/holidaze/profiles/${params.name}?_venues=true&_bookings=true`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'X-Noroff-API-Key': localStorage.getItem('apiKey'),
+          },
+        }
+      );
+      if (!profileResponse.ok) {
+        throw new Error('Failed to fetch profile');
+      }
+      const profileData = await profileResponse.json();
+      setProfile(profileData.data);
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+      setError('Failed to load profile');
+    }
+  };
 
   const handleEdit = () => {
     document.body.classList.add('body-lock');
@@ -67,7 +91,7 @@ const ProfilePage = ({ params }) => {
   const handleSave = async (updatedProfile) => {
     try {
       const response = await fetch(
-        `https://v2.api.noroff.dev/holidaze/profiles/${params.name}`,
+        `${API_URL}/holidaze/profiles/${params.name}`,
         {
           method: 'PUT',
           headers: {
@@ -100,6 +124,69 @@ const ProfilePage = ({ params }) => {
       venues: [...prevProfile.venues, newVenue],
     }));
   };
+
+  const handleDeleteBooking = async (bookingId) => {
+    try {
+      const response = await fetch(
+        `${API_URL}/holidaze/bookings/${bookingId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'X-Noroff-API-Key': localStorage.getItem('apiKey'),
+          },
+        }
+      );
+      if (response.ok) {
+        await fetchProfile();
+        alert('Booking deleted successfully');
+      } else {
+        throw new Error('Failed to delete booking');
+      }
+    } catch (error) {
+      console.error('Error deleting booking:', error);
+      alert('Failed to delete booking. Please try again.');
+    }
+  };
+
+  const handleEditBooking = (booking) => {
+    setSelectedDates([new Date(booking.dateFrom), new Date(booking.dateTo)]);
+    setIsEditingBooking(booking.id);
+  };
+
+  const handleUpdateBooking = async (bookingId, updatedBooking) => {
+    try {
+      const response = await fetch(
+        `${API_URL}/holidaze/bookings/${bookingId}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'X-Noroff-API-Key': localStorage.getItem('apiKey'),
+          },
+          body: JSON.stringify(updatedBooking),
+        }
+      );
+      if (response.ok) {
+        await fetchProfile();
+        setIsEditingBooking(null);
+        alert('Booking updated successfully');
+      } else {
+        throw new Error('Failed to update booking');
+      }
+    } catch (error) {
+      console.error('Error updating booking:', error);
+      alert('Failed to update booking. Please try again.');
+    }
+  };
+
+  const handleDateChange = (dates) => {
+    setSelectedDates(dates);
+  };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <>
@@ -153,14 +240,111 @@ const ProfilePage = ({ params }) => {
                 <MyVenuesDisplay profile={profile} />
               </div>
               <hr className="mx-4 border-lightBlueGrey" />
+
               <div className="mx-4">
                 <h2 className="my-4">My upcoming bookings</h2>
-                <div className="my-4 flex flex-col rounded p-4 shadow-md sm:flex-row">
-                  <p>First image of booking</p>
-                  <div className="border-l-2 border-lightBlueGrey"></div>
-                  <p>Info about booking</p>
+                <div className="my-4 flex flex-col space-y-4">
+                  {profile.bookings.map((booking, index) => {
+                    const totalPrice =
+                      ((new Date(booking.dateTo) - new Date(booking.dateFrom)) /
+                        (1000 * 60 * 60 * 24)) *
+                      booking.venue.price;
+                    return (
+                      <div
+                        key={index}
+                        className="flex flex-col rounded p-4 shadow-md sm:flex-row"
+                      >
+                        <div>
+                          <img
+                            src={
+                              booking.venue.media[0]?.url ||
+                              '/default-image.jpg'
+                            }
+                            alt={booking.venue.media[0]?.alt || 'Venue image'}
+                            className="h-32 w-32 object-cover"
+                          />
+                        </div>
+                        <div className="ml-4">
+                          <p className="font-bold">{booking.venue.name}</p>
+                          <p>
+                            {booking.venue.location.city},{' '}
+                            {booking.venue.location.country}
+                          </p>
+                          <p>
+                            {new Date(booking.dateFrom).toLocaleDateString()} -{' '}
+                            {new Date(booking.dateTo).toLocaleDateString()}
+                          </p>
+                          <p>Guests: {booking.guests}</p>
+                          <p>Total cost: {totalPrice} NOK</p>
+                          <div className="mt-2">
+                            <button
+                              onClick={() => handleEditBooking(booking)}
+                              className="bg-blue-500 mr-2 rounded px-4 py-1 text-blue underline"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => handleDeleteBooking(booking.id)}
+                              className="bg-red-500 rounded px-4 py-1 text-blue underline"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                          {isEditingBooking === booking.id && (
+                            <div className="mt-4">
+                              <BookingCalendar
+                                bookings={profile.bookings}
+                                onDateChange={handleDateChange}
+                              />
+                              <form
+                                onSubmit={async (e) => {
+                                  e.preventDefault();
+                                  const updatedBooking = {
+                                    dateFrom: selectedDates[0].toISOString(),
+                                    dateTo: selectedDates[1].toISOString(),
+                                    guests: Number(e.target.guests.value),
+                                  };
+                                  await handleUpdateBooking(
+                                    booking.id,
+                                    updatedBooking
+                                  );
+                                }}
+                              >
+                                <label>
+                                  Guests:
+                                  <input
+                                    type="number"
+                                    name="guests"
+                                    defaultValue={booking.guests}
+                                    min="1"
+                                    max={booking.venue.maxGuests}
+                                    className="ml-2 rounded border px-2"
+                                  />
+                                </label>
+                                <br />
+                                <button
+                                  type="submit"
+                                  className="mt-2 rounded bg-green-500 px-4 py-1 text-white"
+                                >
+                                  Save
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => setIsEditingBooking(null)}
+                                  className="ml-2 mt-2 rounded bg-gray-500 px-4 py-1 text-white"
+                                >
+                                  Cancel
+                                </button>
+                              </form>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
+
               <hr className="mx-4 border-lightBlueGrey" />
             </>
           )}

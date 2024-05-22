@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ImageCarousel from '@/components/ImageCarousel/ImageCarousel';
 import { Icon } from '@/utils/icons';
 import EditVenueModal from './EditVenueModal';
+import BaseButton from '@/components/BaseButton/BaseButton';
 
 const MyVenuesDisplay = ({ profile }) => {
   const [venues, setVenues] = useState([]);
@@ -81,7 +82,7 @@ const MyVenuesDisplay = ({ profile }) => {
             />
             <button
               onClick={() => openEditModal(venue)}
-              className="hover:bg-creme absolute right-4 top-4 rounded bg-light p-2 shadow-lg sm:right-8"
+              className="absolute right-4 top-4 rounded bg-light p-2 shadow-lg hover:bg-creme sm:right-8"
             >
               <Icon name="pencil" className="text-4xl text-primary" />
             </button>
@@ -99,7 +100,7 @@ const MyVenuesDisplay = ({ profile }) => {
                   .join(', ')) ||
                 'This place has no special offers'}
             </p>
-            <div className="bg-creme my-2 rounded border border-lightBlueGrey p-4 shadow-inner">
+            <div className="my-2 rounded border border-lightBlueGrey bg-creme p-4 shadow-inner">
               <h2>Bookings</h2>
               {venue.bookings && venue.bookings.length > 0 ? (
                 <ul>
@@ -113,6 +114,9 @@ const MyVenuesDisplay = ({ profile }) => {
               ) : (
                 <p>No bookings for this venue.</p>
               )}
+            </div>
+            <div className="text-end">
+              <BaseButton href={`/venue/${venue.id}`}>View</BaseButton>
             </div>
           </div>
         </div>
