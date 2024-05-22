@@ -3,12 +3,23 @@ import Link from 'next/link';
 
 const About = () => {
   return (
-    <div className="about-page p-4">
-      <img
-        src="/nature_image_by_burkard_meyendriesch.jpg"
-        alt="Image of a house at the coast at sunset. By Burkard Meyendriesch"
-        className="my-4 w-full"
-      />
+    <div className="about-page mx-10 p-4">
+      <div className="flex flex-col">
+        <img
+          src="/nature_image_by_burkard_meyendriesch.jpg"
+          alt="Image of a house at the coast at sunset. By Burkard Meyendriesch"
+          className="my-4 w-full"
+        />
+        <p className="mb-4 text-end">
+          Image by:{' '}
+          <Link
+            href="https://pixabay.com/users/bmeyendriesch-10689819/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=6862612"
+            className="underline"
+          >
+            Burkard Meyendriesch
+          </Link>
+        </p>
+      </div>
       <h1 className="mb-4 text-3xl font-bold">About Holidaze</h1>
       <p className="mb-2">
         Welcome to <strong>Holidaze</strong>, an accommodation booking site
