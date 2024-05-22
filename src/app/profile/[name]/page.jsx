@@ -16,36 +16,6 @@ const ProfilePage = ({ params }) => {
   const [isEditingBooking, setIsEditingBooking] = useState(null);
   const [selectedDates, setSelectedDates] = useState([null, null]);
 
-  useEffect(() => {
-    const setupProfile = async () => {
-      try {
-        const profileResponse = await fetch(
-          `${API_URL}/holidaze/profiles/${params.name}?_venues=true&_bookings=true`,
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`,
-              'X-Noroff-API-Key': localStorage.getItem('apiKey'),
-            },
-          }
-        );
-        if (!profileResponse.ok) {
-          throw new Error('Failed to fetch profile');
-        }
-        const profileData = await profileResponse.json();
-        setProfile(profileData.data);
-        console.log(profileData.data);
-      } catch (error) {
-        console.error('Error fetching profile:', error);
-        setError('Failed to load profile');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    setupProfile();
-  }, [params.name]);
-
   const fetchProfile = async () => {
     try {
       const profileResponse = await fetch(
@@ -62,13 +32,18 @@ const ProfilePage = ({ params }) => {
         throw new Error('Failed to fetch profile');
       }
       const profileData = await profileResponse.json();
-      console.log(profileData);
       setProfile(profileData.data);
     } catch (error) {
       console.error('Error fetching profile:', error);
       setError('Failed to load profile');
+    } finally {
+      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchProfile();
+  }, [params.name]);
 
   const handleEdit = () => {
     document.body.classList.add('body-lock');
@@ -107,9 +82,8 @@ const ProfilePage = ({ params }) => {
       if (!response.ok) {
         throw new Error('Failed to update profile');
       }
-      const updatedData = await response.json();
-      setProfile(updatedData.data);
-      setIsEditing(false);
+      await fetchProfile();
+      handleCloseEdit();
     } catch (error) {
       console.error('Error updating profile:', error);
     }
@@ -211,14 +185,14 @@ const ProfilePage = ({ params }) => {
                 />
                 <div className="my-4 flex">
                   <div>
-                    <a href="#" onClick={handleEdit} className="underline">
+                    <a role="button" onClick={handleEdit} className="underline">
                       Edit Profile
                     </a>
                   </div>
                   {profile.venueManager && (
                     <div className="ml-10">
                       <a
-                        href="#"
+                        role="button"
                         onClick={(e) => {
                           e.preventDefault();
                           handleCreateVenue();
@@ -238,11 +212,12 @@ const ProfilePage = ({ params }) => {
                 <p>{profile.bio ? profile.bio : 'No bio provided'}</p>
               </div>
               <hr className="mx-4 border-lightBlueGrey" />
-              <div>
-                <MyVenuesDisplay profile={profile} />
-              </div>
-              <hr className="mx-4 border-lightBlueGrey" />
-
+              {profile.venueManager && (
+                <>
+                  <MyVenuesDisplay profile={profile} />
+                  <hr className="mx-4 border-lightBlueGrey" />
+                </>
+              )}
               <div className="mx-4">
                 <h2 className="my-4">My upcoming bookings</h2>
                 <div className="my-4 flex flex-col space-y-4">
@@ -353,7 +328,6 @@ const ProfilePage = ({ params }) => {
                     })}
                 </div>
               </div>
-
               <hr className="mx-4 border-lightBlueGrey" />
             </>
           )}
