@@ -246,108 +246,111 @@ const ProfilePage = ({ params }) => {
               <div className="mx-4">
                 <h2 className="my-4">My upcoming bookings</h2>
                 <div className="my-4 flex flex-col space-y-4">
-                  {profile.bookings.map((booking, index) => {
-                    const totalPrice =
-                      ((new Date(booking.dateTo) - new Date(booking.dateFrom)) /
-                        (1000 * 60 * 60 * 24)) *
-                      booking.venue.price;
-                    return (
-                      <div
-                        key={index}
-                        className="flex flex-col rounded p-4 shadow-md sm:flex-row"
-                      >
-                        <div>
-                          <img
-                            src={
-                              booking.venue.media[0]?.url ||
-                              '/default-image.jpg'
-                            }
-                            alt={booking.venue.media[0]?.alt || 'Venue image'}
-                            className="h-32 w-32 object-cover"
-                          />
-                        </div>
-                        <div className="ml-4">
-                          <Link href={`/venue/${booking.venue.id}`}>
-                            <p className="underline hover:font-bold">
-                              {booking.venue.name}
-                            </p>
-                          </Link>
-                          <p>
-                            {booking.venue.location.city},{' '}
-                            {booking.venue.location.country}
-                          </p>
-                          <p>
-                            {new Date(booking.dateFrom).toLocaleDateString()} -{' '}
-                            {new Date(booking.dateTo).toLocaleDateString()}
-                          </p>
-                          <p>Guests: {booking.guests}</p>
-                          <p>Total cost: {totalPrice} NOK</p>
-                          <div className="mt-2">
-                            <button
-                              onClick={() => handleEditBooking(booking)}
-                              className="mr-2 rounded px-4 py-1 text-blue underline hover:font-bold focus:bg-yellow-100"
-                            >
-                              Edit
-                            </button>
-                            <button
-                              onClick={() => handleDeleteBooking(booking.id)}
-                              className="rounded bg-lightRed px-4 py-1 text-darkBlue hover:bg-red hover:text-white"
-                            >
-                              Delete
-                            </button>
+                  {profile.bookings
+                    .sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom))
+                    .map((booking, index) => {
+                      const totalPrice =
+                        ((new Date(booking.dateTo) -
+                          new Date(booking.dateFrom)) /
+                          (1000 * 60 * 60 * 24)) *
+                        booking.venue.price;
+                      return (
+                        <div
+                          key={index}
+                          className="flex flex-col rounded p-4 shadow-md sm:flex-row"
+                        >
+                          <div>
+                            <img
+                              src={
+                                booking.venue.media[0]?.url ||
+                                '/default-image.jpg'
+                              }
+                              alt={booking.venue.media[0]?.alt || 'Venue image'}
+                              className="h-32 w-32 object-cover"
+                            />
                           </div>
-                          {isEditingBooking === booking.id && (
-                            <div className="mt-4">
-                              <BookingCalendar
-                                bookings={profile.bookings}
-                                onDateChange={handleDateChange}
-                              />
-                              <form
-                                onSubmit={async (e) => {
-                                  e.preventDefault();
-                                  const updatedBooking = {
-                                    dateFrom: selectedDates[0].toISOString(),
-                                    dateTo: selectedDates[1].toISOString(),
-                                    guests: Number(e.target.guests.value),
-                                  };
-                                  await handleUpdateBooking(
-                                    booking.id,
-                                    updatedBooking
-                                  );
-                                }}
+                          <div className="ml-4">
+                            <Link href={`/venue/${booking.venue.id}`}>
+                              <p className="underline hover:font-bold">
+                                {booking.venue.name}
+                              </p>
+                            </Link>
+                            <p>
+                              {booking.venue.location.city},{' '}
+                              {booking.venue.location.country}
+                            </p>
+                            <p>
+                              {new Date(booking.dateFrom).toLocaleDateString()}{' '}
+                              - {new Date(booking.dateTo).toLocaleDateString()}
+                            </p>
+                            <p>Guests: {booking.guests}</p>
+                            <p>Total cost: {totalPrice} NOK</p>
+                            <div className="mt-2">
+                              <button
+                                onClick={() => handleEditBooking(booking)}
+                                className="mr-2 rounded px-4 py-1 text-blue underline hover:font-bold focus:bg-yellow-100"
                               >
-                                <label>
-                                  Guests:
-                                  <input
-                                    type="number"
-                                    name="guests"
-                                    defaultValue={booking.guests}
-                                    min="1"
-                                    max={booking.venue.maxGuests}
-                                    className="ml-2 rounded border px-2"
-                                  />
-                                </label>
-                                <br />
-                                <button
-                                  type="submit"
-                                  className="mt-2 rounded bg-green-500 px-4 py-1 text-white hover:bg-green-400"
-                                >
-                                  Save
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => setIsEditingBooking(null)}
-                                  className="ml-2 mt-2 rounded bg-gray-500 px-4 py-1 text-white hover:bg-gray-400"
-                                >
-                                  Cancel
-                                </button>
-                              </form>
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => handleDeleteBooking(booking.id)}
+                                className="rounded bg-lightRed px-4 py-1 text-darkBlue hover:bg-red hover:text-white"
+                              >
+                                Delete
+                              </button>
                             </div>
-                          )}
+                            {isEditingBooking === booking.id && (
+                              <div className="mt-4">
+                                <BookingCalendar
+                                  bookings={profile.bookings}
+                                  onDateChange={handleDateChange}
+                                />
+                                <form
+                                  onSubmit={async (e) => {
+                                    e.preventDefault();
+                                    const updatedBooking = {
+                                      dateFrom: selectedDates[0].toISOString(),
+                                      dateTo: selectedDates[1].toISOString(),
+                                      guests: Number(e.target.guests.value),
+                                    };
+                                    await handleUpdateBooking(
+                                      booking.id,
+                                      updatedBooking
+                                    );
+                                  }}
+                                >
+                                  <label>
+                                    Guests:
+                                    <input
+                                      type="number"
+                                      name="guests"
+                                      defaultValue={booking.guests}
+                                      min="1"
+                                      max={booking.venue.maxGuests}
+                                      className="ml-2 rounded border px-2"
+                                    />
+                                  </label>
+                                  <br />
+                                  <button
+                                    type="submit"
+                                    className="mt-2 rounded bg-green-500 px-4 py-1 text-white hover:bg-green-400"
+                                  >
+                                    Save
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => setIsEditingBooking(null)}
+                                    className="ml-2 mt-2 rounded bg-gray-500 px-4 py-1 text-white hover:bg-gray-400"
+                                  >
+                                    Cancel
+                                  </button>
+                                </form>
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
                 </div>
               </div>
 
