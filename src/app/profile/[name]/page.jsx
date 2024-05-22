@@ -279,13 +279,13 @@ const ProfilePage = ({ params }) => {
                           <div className="mt-2">
                             <button
                               onClick={() => handleEditBooking(booking)}
-                              className="bg-blue-500 mr-2 rounded px-4 py-1 text-blue underline"
+                              className="mr-2 rounded px-4 py-1 text-blue underline focus:bg-yellow-100"
                             >
                               Edit
                             </button>
                             <button
                               onClick={() => handleDeleteBooking(booking.id)}
-                              className="bg-red-500 rounded px-4 py-1 text-blue underline"
+                              className="rounded bg-lightRed px-4 py-1 text-darkBlue hover:bg-red hover:text-white"
                             >
                               Delete
                             </button>
@@ -324,14 +324,14 @@ const ProfilePage = ({ params }) => {
                                 <br />
                                 <button
                                   type="submit"
-                                  className="mt-2 rounded bg-green-500 px-4 py-1 text-white"
+                                  className="mt-2 rounded bg-green-500 px-4 py-1 text-white hover:bg-green-400"
                                 >
                                   Save
                                 </button>
                                 <button
                                   type="button"
                                   onClick={() => setIsEditingBooking(null)}
-                                  className="ml-2 mt-2 rounded bg-gray-500 px-4 py-1 text-white"
+                                  className="ml-2 mt-2 rounded bg-gray-500 px-4 py-1 text-white hover:bg-gray-400"
                                 >
                                   Cancel
                                 </button>
