@@ -5,10 +5,12 @@ const About = () => {
   return (
     <div className="about-page mx-10 p-4">
       <div className="flex flex-col">
-        <img
+        <Image
           src="/nature_image_by_burkard_meyendriesch.jpg"
           alt="Image of a house at the coast at sunset. By Burkard Meyendriesch"
           className="my-4 w-full"
+          width={1200} // specify the width of the image
+          height={800} // specify the height of the image
         />
         <p className="mb-4 text-end">
           Image by:{' '}
@@ -58,9 +60,9 @@ const About = () => {
       <h2 className="mb-2 mt-4 text-2xl font-semibold">Our Goal</h2>
       <p className="mb-2">
         Our aim is to provide a user-friendly platform that simplifies the
-        process of booking accommodations. Whether you're a traveler looking for
-        a place to stay or a venue manager wanting to list your property,
-        Holidaze is designed to meet your needs.
+        process of booking accommodations. Whether you&apos;re a traveler
+        looking for a place to stay or a venue manager wanting to list your
+        property, Holidaze is designed to meet your needs.
       </p>
       <h2 className="mb-2 mt-4 text-2xl font-semibold">Mobile-First Design</h2>
       <p>
