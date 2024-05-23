@@ -13,18 +13,36 @@ const MyVenuesDisplay = ({ profile }) => {
   const bookingsPerPage = 3;
 
   useEffect(() => {
-    const fetchBookingsForVenue = async (venueId) => {
-      const response = await fetch(
-        `${API_URL}/holidaze/venues/${venueId}?_bookings=true`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'X-Noroff-API-Key': localStorage.getItem('apiKey'),
-          },
+    const fetchBookingsForVenue = async (venueId, retries = 3) => {
+      try {
+        const response = await fetch(
+          `${API_URL}/holidaze/venues/${venueId}?_bookings=true`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+              'X-Noroff-API-Key': localStorage.getItem('apiKey'),
+            },
+          }
+        );
+
+        if (!response.ok) {
+          if (retries > 0) {
+            console.log(
+              `Retrying fetch for venue ${venueId}. Retries left: ${retries}`
+            );
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            return await fetchBookingsForVenue(venueId, retries - 1);
+          } else {
+            throw new Error(`Failed to fetch bookings for venue ${venueId}`);
+          }
         }
-      );
-      const data = await response.json();
-      return data.data.bookings || [];
+
+        const data = await response.json();
+        return data.data.bookings || [];
+      } catch (error) {
+        console.error(error);
+        return [];
+      }
     };
 
     const fetchBookings = async () => {
@@ -67,6 +85,10 @@ const MyVenuesDisplay = ({ profile }) => {
   };
 
   const getFutureBookings = (bookings) => {
+    if (!Array.isArray(bookings)) {
+      return [];
+    }
+
     const now = new Date();
     const nowDateOnly = new Date(
       now.getFullYear(),

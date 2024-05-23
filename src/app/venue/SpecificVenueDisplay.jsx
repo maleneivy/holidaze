@@ -166,6 +166,7 @@ const SpecificVenueDisplay = ({ images, venue }) => {
           </p>
           <p>Max guests: {venue.maxGuests}</p>
           <p>Owner: {venue.owner.name}</p>
+          <p>Price: {venue.price} per night</p>
         </div>
         <OffersDisplay offers={venue.meta} />
         <div>

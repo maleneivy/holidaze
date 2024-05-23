@@ -37,7 +37,7 @@ const EditVenueModal = ({
       setFormData({
         name: venue.name || '',
         description: venue.description || '',
-        images: venue.media && venue.media.length > 0 ? venue.media : [],
+        images: Array.isArray(venue.media) ? venue.media : [],
         price: venue.price || '',
         maxGuests: venue.maxGuests || '',
         wifi: venue.meta?.wifi || false,
@@ -113,7 +113,6 @@ const EditVenueModal = ({
 
       const result = await response.json();
       onSaveComplete(result.data);
-      console.log(result.data);
       setIsSaving(false);
       setSuccessMessage('Venue updated successfully!');
       setTimeout(() => setSuccessMessage(''), 10000);
