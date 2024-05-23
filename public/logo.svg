@@ -1,0 +1,6 @@
+<svg id="Logo" xmlns="http://www.w3.org/2000/svg" width="110" height="38" viewBox="0 0 110 38">
+  <text id="Holidaze" transform="translate(6 28)" fill="#1b5185" font-size="25" font-family="ArekLatn-Sb, Arek Latin"><tspan x="0" y="0">Holidaze</tspan></text>
+  <path id="Polygon_1" data-name="Polygon 1" d="M16.5,0,33,9H0Z" fill="#239bb3"/>
+  <path id="Path_3" data-name="Path 3" d="M12.5,0,25,7H0Z" transform="translate(110 38) rotate(180)" fill="#239bb3"/>
+  <rect id="Rectangle_7" data-name="Rectangle 7" width="3" height="6" transform="translate(22)" fill="#239bb3"/>
+</svg>
