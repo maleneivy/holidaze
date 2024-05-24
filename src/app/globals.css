@@ -8,11 +8,9 @@ body {
   min-height: 100vh;
   max-width: 1290px;
   margin: 0 auto;
-}
-
-html,
-body {
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  @apply shadow;
 }
 
 .body-lock {
