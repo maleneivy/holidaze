@@ -1,5 +1,6 @@
 import { fetchSingleVenue } from '@/utils/api/api';
 import SpecificVenueDisplay from '../SpecificVenueDisplay';
+import Breadcrumb from '@/components/BreadCrumb/BreadCrumb';
 
 const SpecificVenuePage = async ({ params }) => {
   const { slug } = params;
@@ -13,8 +14,11 @@ const SpecificVenuePage = async ({ params }) => {
       : [{ url: '/default-post-image.jpg', alt: 'Default Image' }];
 
   return (
-    <div className="mx-auto my-5 max-w-4xl">
-      <SpecificVenueDisplay images={images} venue={venue} />
+    <div>
+      <Breadcrumb />
+      <div className="mx-auto my-5 max-w-4xl">
+        <SpecificVenueDisplay images={images} venue={venue} />
+      </div>
     </div>
   );
 };

@@ -28,6 +28,7 @@ module.exports = {
         },
         light: '#FDFDFD',
         grey: '#DBDBDB',
+        darkGrey: '#989898',
         lightBlueGrey: '#E5E9ED',
         inputText: '#647381',
       },

@@ -235,7 +235,14 @@ const MyVenuesDisplay = ({ profile }) => {
                 )}
               </div>
               <div className="text-end">
-                <BaseButton href={`/venue/${venue.id}`}>View</BaseButton>
+                <BaseButton
+                  href={{
+                    pathname: `/venue/${venue.id}`,
+                    query: { from: 'profile', profileName: profile.name },
+                  }}
+                >
+                  View
+                </BaseButton>
               </div>
             </div>
           </div>

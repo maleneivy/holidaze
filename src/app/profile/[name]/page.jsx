@@ -245,7 +245,15 @@ const ProfilePage = ({ params }) => {
                             />
                           </div>
                           <div className="ml-4">
-                            <Link href={`/venue/${booking.venue.id}`}>
+                            <Link
+                              href={{
+                                pathname: `/venue/${booking.venue.id}`,
+                                query: {
+                                  from: 'profile',
+                                  profileName: profile.name,
+                                },
+                              }}
+                            >
                               <p className="underline hover:font-bold">
                                 {booking.venue.name}
                               </p>
