@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { API_URL } from '@/utils/api/api';
 import Link from 'next/link';
 import Loader from '@/components/Loader/Loader';
+import BaseButton from '@/components/BaseButton/BaseButton';
 
 const ProfilePage = ({ params }) => {
   const [profile, setProfile] = useState(null);
@@ -166,7 +167,7 @@ const ProfilePage = ({ params }) => {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <>
+    <main>
       <div className="relative">
         <img
           src={profile.banner?.url}
@@ -175,7 +176,7 @@ const ProfilePage = ({ params }) => {
         />
       </div>
       <div className="mx-auto my-20 flex max-w-128 flex-col">
-        <div className="">
+        <div>
           {profile && (
             <>
               <div className="flex flex-col items-center">
@@ -233,7 +234,7 @@ const ProfilePage = ({ params }) => {
                       return (
                         <div
                           key={index}
-                          className="flex flex-col rounded p-4 shadow-md sm:flex-row"
+                          className="mt-4 flex flex-col rounded p-4 shadow-md sm:flex-row"
                         >
                           <div>
                             <img
@@ -242,7 +243,7 @@ const ProfilePage = ({ params }) => {
                                 '/default-image.jpg'
                               }
                               alt={booking.venue.media[0]?.alt || 'Venue image'}
-                              className="h-32 w-32 object-cover"
+                              className="object-cover sm:size-32"
                             />
                           </div>
                           <div className="ml-4">
@@ -255,7 +256,7 @@ const ProfilePage = ({ params }) => {
                                 },
                               }}
                             >
-                              <p className="max-w-xs overflow-hidden truncate underline hover:font-bold">
+                              <p className="mt-2 max-w-xs overflow-hidden truncate underline hover:font-bold sm:mt-0">
                                 {booking.venue.name}
                               </p>
                             </Link>
@@ -271,18 +272,18 @@ const ProfilePage = ({ params }) => {
                             </p>
                             <p>Guests: {booking.guests}</p>
                             <p>Total cost: {totalPrice} NOK</p>
-                            <div className="mt-2">
-                              <button
+                            <div className="mx-auto mt-4 flex justify-between">
+                              <BaseButton
                                 onClick={() => handleEditBooking(booking)}
-                                className="mr-2 rounded px-4 py-1 text-blue underline hover:font-bold focus:bg-yellow-100"
+                                className="mr-2 rounded px-4 py-1 text-blue hover:font-bold focus:bg-yellow-100"
                               >
-                                Edit
-                              </button>
+                                Edit booking
+                              </BaseButton>
                               <button
                                 onClick={() => handleDeleteBooking(booking.id)}
                                 className="rounded bg-lightRed px-4 py-1 text-darkBlue hover:bg-red hover:text-white"
                               >
-                                Delete
+                                Delete booking
                               </button>
                             </div>
                             {isEditingBooking === booking.id && (
@@ -305,31 +306,38 @@ const ProfilePage = ({ params }) => {
                                     );
                                   }}
                                 >
-                                  <label>
-                                    Guests:
-                                    <input
-                                      type="number"
-                                      name="guests"
-                                      defaultValue={booking.guests}
-                                      min="1"
-                                      max={booking.venue.maxGuests}
-                                      className="ml-2 rounded border px-2"
-                                    />
-                                  </label>
-                                  <br />
-                                  <button
-                                    type="submit"
-                                    className="mt-2 rounded bg-green-500 px-4 py-1 text-white hover:bg-green-400"
-                                  >
-                                    Save
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => setIsEditingBooking(null)}
-                                    className="ml-2 mt-2 rounded bg-gray-500 px-4 py-1 text-white hover:bg-gray-400"
-                                  >
-                                    Cancel
-                                  </button>
+                                  <div className="flex flex-col">
+                                    <div className="flex items-baseline justify-between">
+                                      <label>
+                                        Guests:
+                                        <input
+                                          type="number"
+                                          name="guests"
+                                          defaultValue={booking.guests}
+                                          min="1"
+                                          max={booking.venue.maxGuests}
+                                          className="ml-2 rounded border px-2"
+                                        />
+                                      </label>
+                                    </div>
+                                    <div className="mt-4">
+                                      <button
+                                        type="submit"
+                                        className="mt-2 rounded bg-green-500 px-4 py-1 text-white hover:bg-green-400"
+                                      >
+                                        Save
+                                      </button>
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          setIsEditingBooking(null)
+                                        }
+                                        className="ml-2 mt-2 rounded bg-gray-500 px-4 py-1 text-white hover:bg-gray-400"
+                                      >
+                                        Cancel
+                                      </button>
+                                    </div>
+                                  </div>
                                 </form>
                               </div>
                             )}
@@ -359,7 +367,7 @@ const ProfilePage = ({ params }) => {
           onAddVenue={addNewVenue}
         />
       )}
-    </>
+    </main>
   );
 };
 
