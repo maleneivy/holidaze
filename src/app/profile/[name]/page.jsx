@@ -6,6 +6,7 @@ import BookingCalendar from '@/components/Booking/BookingCalendar';
 import React, { useEffect, useState } from 'react';
 import { API_URL } from '@/utils/api/api';
 import Link from 'next/link';
+import Loader from '@/components/Loader/Loader';
 
 const ProfilePage = ({ params }) => {
   const [profile, setProfile] = useState(null);
@@ -161,7 +162,7 @@ const ProfilePage = ({ params }) => {
     setSelectedDates(dates);
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loader />;
   if (error) return <p>Error: {error}</p>;
 
   return (
