@@ -12,6 +12,7 @@ import BaseButton from '../BaseButton/BaseButton';
 const GetVenues = () => {
   const [venues, setVenues] = useState([]);
   const [filteredVenues, setFilteredVenues] = useState([]);
+  const [visibleVenues, setVisibleVenues] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -24,9 +25,7 @@ const GetVenues = () => {
   });
   const [loading, setLoading] = useState(true);
   const [loadMoreLoading, setLoadMoreLoading] = useState(false);
-  const [visibleVenues, setVisibleVenues] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const venuesPerPage = 10;
+  const [itemsToShow, setItemsToShow] = useState(10);
 
   useEffect(() => {
     const getVenues = async () => {
@@ -34,7 +33,7 @@ const GetVenues = () => {
         const data = await fetchVenues();
         setVenues(data.data);
         setFilteredVenues(data.data);
-        setVisibleVenues(data.data.slice(0, venuesPerPage));
+        setVisibleVenues(data.data.slice(0, 10));
       } catch (error) {
         console.error('Error fetching venues', error);
       } finally {
@@ -73,7 +72,6 @@ const GetVenues = () => {
         );
         const data = await response.json();
         filtered = data.data;
-        console.log(filtered);
       } catch (error) {
         console.error('Error searching venues', error);
         filtered = [];
@@ -112,18 +110,15 @@ const GetVenues = () => {
     }
 
     setFilteredVenues(filtered);
-    setVisibleVenues(filtered.slice(0, currentPage * venuesPerPage));
+    setVisibleVenues(filtered.slice(0, itemsToShow));
   };
 
   const loadMoreVenues = () => {
     setLoadMoreLoading(true);
     setTimeout(() => {
-      setCurrentPage((prevPage) => {
-        const nextPage = prevPage + 1;
-        setVisibleVenues(filteredVenues.slice(0, nextPage * venuesPerPage));
-        setLoadMoreLoading(false);
-        return nextPage;
-      });
+      setItemsToShow((prev) => prev + 10);
+      setVisibleVenues(filteredVenues.slice(0, itemsToShow + 10));
+      setLoadMoreLoading(false);
     }, 1000);
   };
 
@@ -143,20 +138,18 @@ const GetVenues = () => {
             {visibleVenues.map((venue) => (
               <VenueCard key={venue.id} venue={venue} />
             ))}
-            {visibleVenues.length < filteredVenues.length && (
-              <BaseButton
-                onClick={loadMoreVenues}
-                disabled={loadMoreLoading}
-                className="mt-4"
-              >
-                {loadMoreLoading ? 'Loading...' : 'Load More'}
-              </BaseButton>
-            )}
           </>
         ) : (
           <p>No results found.</p>
         )}
       </div>
+      {visibleVenues.length < filteredVenues.length && (
+        <div className="my-4 mb-20 flex justify-center">
+          <BaseButton onClick={loadMoreVenues} disabled={loadMoreLoading}>
+            {loadMoreLoading ? 'Loading...' : 'Load More'}
+          </BaseButton>
+        </div>
+      )}
     </div>
   );
 };
