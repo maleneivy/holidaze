@@ -1,20 +1,9 @@
 'use client';
 
 const { Icon } = require('@/utils/icons');
-const { useState } = require('react');
 const { default: Links } = require('../links/Links');
 
-const DropDownMenu = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const closeMenu = () => {
-    setIsOpen(false);
-  };
-
+const DropDownMenu = ({ isOpen, toggleMenu, closeMenu }) => {
   return (
     <div className="relative z-50">
       <button onClick={toggleMenu} className="p-2">

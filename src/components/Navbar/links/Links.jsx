@@ -20,10 +20,18 @@ const Links = ({ onLinkClick }) => {
 
   return (
     <div className="flex flex-col pt-3">
-      <Link href="/about" className="px-4 py-2 hover:underline">
+      <Link
+        href="/about"
+        className="px-4 py-2 hover:underline"
+        onClick={onLinkClick}
+      >
         About
       </Link>
-      <Link href="/contact" className="px-4 py-2 hover:underline">
+      <Link
+        href="/contact"
+        className="px-4 py-2 hover:underline"
+        onClick={onLinkClick}
+      >
         Contact
       </Link>
       {isLoggedIn ? (
@@ -31,7 +39,11 @@ const Links = ({ onLinkClick }) => {
           Logout
         </button>
       ) : (
-        <Link href="/login" className="px-4 py-2 hover:underline">
+        <Link
+          href="/login"
+          className="px-4 py-2 hover:underline"
+          onClick={onLinkClick}
+        >
           Login
         </Link>
       )}
