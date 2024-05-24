@@ -39,6 +39,18 @@ module.exports = {
         sans: ['ff-scala-sans-pro', 'sans-serif'],
         serif: ['arek', 'serif'],
       },
+      keyframes: {
+        spinScale: {
+          '0%': { transform: 'rotate(0deg) scale(1)' },
+          '50%': {
+            transform: 'rotate(360deg) scale(1.3)',
+          },
+          '100%': { transform: 'rotate(720deg) scale(1)' },
+        },
+      },
+      animation: {
+        spinScale: 'spinScale 6s ease-in-out infinite',
+      },
     },
   },
   plugins: [],
