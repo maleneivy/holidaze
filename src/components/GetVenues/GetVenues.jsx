@@ -6,6 +6,7 @@ import SearchComponent from '../Search/Search';
 import DateFilter from '../Filters/DateFilter';
 import FilterDropdown from '../Filters/dropdown/FilterDropdown';
 import { API_URL } from '@/utils/api/api';
+import Loader from '../Loader/Loader';
 
 const GetVenues = () => {
   const [venues, setVenues] = useState([]);
@@ -20,6 +21,7 @@ const GetVenues = () => {
     breakfast: false,
     pets: false,
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getVenues = async () => {
@@ -29,6 +31,8 @@ const GetVenues = () => {
         setFilteredVenues(data.data);
       } catch (error) {
         console.error('Error fetching venues', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -113,7 +117,9 @@ const GetVenues = () => {
       <DateFilter onDateChange={handleDateChange} />
       <FilterDropdown onFilterChange={handleFilterChange} />
       <div className="my-4 flex flex-wrap justify-center gap-4 px-5">
-        {filteredVenues.length > 0 ? (
+        {loading ? (
+          <Loader />
+        ) : filteredVenues.length > 0 ? (
           filteredVenues.map((venue) => (
             <VenueCard key={venue.id} venue={venue} />
           ))
