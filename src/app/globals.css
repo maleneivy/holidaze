@@ -10,6 +10,11 @@ body {
   margin: 0 auto;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 .body-lock {
   overflow: hidden;
   position: fixed;

@@ -1,6 +1,7 @@
 import './globals.css';
 import Navbar from '@/components/Navbar/Navbar';
 import { AuthProvider } from './lib/authProvider';
+import Footer from '@/components/Footer/Footer';
 
 export const metadata = {
   title: 'Holidaze - Book your next vacay',
@@ -17,6 +18,7 @@ export default function RootLayout({ children }) {
         <body className="overflow-x-hidden">
           <Navbar />
           {children}
+          <Footer />
         </body>
       </html>
     </AuthProvider>
