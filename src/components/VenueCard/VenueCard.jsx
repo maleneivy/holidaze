@@ -14,7 +14,9 @@ const VenueCard = ({ venue }) => {
       <ImageCarousel images={images} />
       <div className="px-6 py-4">
         <div className="mb-2 text-xl font-bold">
-          <h3 className="text-base">{venue.name}</h3>
+          <h3 className="max-h-10 overflow-hidden truncate text-base">
+            {venue.name}
+          </h3>
           <p className="text-sm">Max guests: {venue.maxGuests}</p>
         </div>
       </div>

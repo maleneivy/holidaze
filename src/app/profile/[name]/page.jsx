@@ -254,12 +254,14 @@ const ProfilePage = ({ params }) => {
                                 },
                               }}
                             >
-                              <p className="underline hover:font-bold">
+                              <p className="max-w-xs overflow-hidden truncate underline hover:font-bold">
                                 {booking.venue.name}
                               </p>
                             </Link>
-                            <p>
-                              {booking.venue.location.city},{' '}
+                            <p className="max-w-xs overflow-hidden truncate">
+                              {booking.venue.location.city}
+                            </p>
+                            <p className="max-w-xs overflow-hidden truncate">
                               {booking.venue.location.country}
                             </p>
                             <p>

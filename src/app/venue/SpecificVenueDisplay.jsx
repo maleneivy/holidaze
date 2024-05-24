@@ -158,10 +158,12 @@ const SpecificVenueDisplay = ({ images, venue }) => {
       )}
       <div className="mt-8">
         <div>
-          <h1 className="font-bold">{venue.name}</h1>
+          <h1 className="max-h-10 overflow-hidden truncate text-base font-bold">
+            {venue.name}
+          </h1>
         </div>
         <div>
-          <p>
+          <p className="overflow-hidden truncate">
             {venue.location.country}, {venue.location.city}
           </p>
           <p>Max guests: {venue.maxGuests}</p>
@@ -172,7 +174,7 @@ const SpecificVenueDisplay = ({ images, venue }) => {
         <div>
           <h2 className="font-bold">Description</h2>
           {venue.description.length > 0 ? (
-            <p>{venue.description}</p>
+            <p className="overflow-hidden truncate">{venue.description}</p>
           ) : (
             <p>There are no description provided for this venue.</p>
           )}
@@ -248,12 +250,12 @@ const SpecificVenueDisplay = ({ images, venue }) => {
         <div>
           <h2 className="font-bold">Location</h2>
           {venue.location.address ? (
-            <p>{venue.location.address}</p>
+            <p className="overflow-hidden truncate">{venue.location.address}</p>
           ) : (
             <p>No address provided</p>
           )}
           {venue.location.city ? (
-            <p>{venue.location.city}</p>
+            <p className="overflow-hidden truncate">{venue.location.city}</p>
           ) : (
             <p>No city provided</p>
           )}
