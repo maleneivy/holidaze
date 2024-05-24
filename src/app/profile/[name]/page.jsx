@@ -20,6 +20,7 @@ const ProfilePage = ({ params }) => {
   const [selectedDates, setSelectedDates] = useState([null, null]);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const [bookingToDelete, setBookingToDelete] = useState(null);
+  const [editErrors, setEditErrors] = useState({});
 
   const fetchProfile = async () => {
     try {
@@ -58,6 +59,7 @@ const ProfilePage = ({ params }) => {
   const handleCloseEdit = () => {
     document.body.classList.remove('body-lock');
     setIsEditing(false);
+    setEditErrors({});
   };
 
   const handleCreateVenue = () => {
@@ -85,6 +87,22 @@ const ProfilePage = ({ params }) => {
         }
       );
       if (!response.ok) {
+        const errorData = await response.json();
+        const newErrors = {};
+
+        errorData.errors.forEach((err) => {
+          const key = err.path.join('.');
+          newErrors[key] = err.message;
+        });
+
+        if (!newErrors['avatar.url']) {
+          newErrors['avatar.url'] = 'Invalid URL';
+        }
+        if (!newErrors['banner.url']) {
+          newErrors['banner.url'] = 'Invalid URL';
+        }
+
+        setEditErrors(newErrors);
         throw new Error('Failed to update profile');
       }
       await fetchProfile();
@@ -191,7 +209,7 @@ const ProfilePage = ({ params }) => {
         <img
           src={profile.banner?.url}
           alt={profile.banner?.alt}
-          className="absolute inset-0 -z-10 h-36 w-full object-cover md:h-48"
+          className="absolute inset-0 -z-10 h-36 w-full object-cover shadow-inner md:h-48"
         />
       </div>
       <div className="mx-auto my-20 flex max-w-128 flex-col">
@@ -230,7 +248,9 @@ const ProfilePage = ({ params }) => {
                 <p>{profile.name}</p>
                 <p>{profile.email}</p>
                 <h3 className="mb-2 mt-4">Bio</h3>
-                <p>{profile.bio ? profile.bio : 'No bio provided'}</p>
+                <p className="whitesp break-words">
+                  {profile.bio ? profile.bio : 'No bio provided'}
+                </p>
               </div>
               <hr className="mx-4 border-lightBlueGrey" />
               {profile.venueManager && (
@@ -377,6 +397,7 @@ const ProfilePage = ({ params }) => {
           profile={profile}
           onClose={handleCloseEdit}
           onSave={handleSave}
+          errors={editErrors}
         />
       )}
       {isCreating && (
