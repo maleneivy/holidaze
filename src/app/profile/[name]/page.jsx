@@ -8,6 +8,7 @@ import { API_URL } from '@/utils/api/api';
 import Link from 'next/link';
 import Loader from '@/components/Loader/Loader';
 import BaseButton from '@/components/BaseButton/BaseButton';
+import ConfirmationModal from '@/components/ConfirmationModal/ConfirmationModal';
 
 const ProfilePage = ({ params }) => {
   const [profile, setProfile] = useState(null);
@@ -17,6 +18,8 @@ const ProfilePage = ({ params }) => {
   const [isCreating, setIsCreating] = useState(false);
   const [isEditingBooking, setIsEditingBooking] = useState(null);
   const [selectedDates, setSelectedDates] = useState([null, null]);
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+  const [bookingToDelete, setBookingToDelete] = useState(null);
 
   const fetchProfile = async () => {
     try {
@@ -163,6 +166,22 @@ const ProfilePage = ({ params }) => {
     setSelectedDates(dates);
   };
 
+  const confirmDeleteBooking = (bookingId) => {
+    setBookingToDelete(bookingId);
+    setIsConfirmingDelete(true);
+  };
+
+  const cancelDeleteBooking = () => {
+    setBookingToDelete(null);
+    setIsConfirmingDelete(false);
+  };
+
+  const proceedDeleteBooking = () => {
+    handleDeleteBooking(bookingToDelete);
+    setBookingToDelete(null);
+    setIsConfirmingDelete(false);
+  };
+
   if (loading) return <Loader />;
   if (error) return <p>Error: {error}</p>;
 
@@ -280,7 +299,7 @@ const ProfilePage = ({ params }) => {
                                 Edit booking
                               </BaseButton>
                               <button
-                                onClick={() => handleDeleteBooking(booking.id)}
+                                onClick={() => confirmDeleteBooking(booking.id)}
                                 className="rounded bg-lightRed px-4 py-1 text-darkBlue hover:bg-red hover:text-white"
                               >
                                 Delete booking
@@ -365,6 +384,13 @@ const ProfilePage = ({ params }) => {
           onClose={handleCloseCreateVenue}
           onSave={handleSaveNewVenue}
           onAddVenue={addNewVenue}
+        />
+      )}
+      {isConfirmingDelete && (
+        <ConfirmationModal
+          message="Are you sure you want to delete the booking?"
+          onConfirm={proceedDeleteBooking}
+          onCancel={cancelDeleteBooking}
         />
       )}
     </main>
