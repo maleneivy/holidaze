@@ -7,6 +7,7 @@ import DateFilter from '../Filters/DateFilter';
 import FilterDropdown from '../Filters/dropdown/FilterDropdown';
 import { API_URL } from '@/utils/api/api';
 import Loader from '../Loader/Loader';
+import BaseButton from '../BaseButton/BaseButton';
 
 const GetVenues = () => {
   const [venues, setVenues] = useState([]);
@@ -22,6 +23,10 @@ const GetVenues = () => {
     pets: false,
   });
   const [loading, setLoading] = useState(true);
+  const [loadMoreLoading, setLoadMoreLoading] = useState(false);
+  const [visibleVenues, setVisibleVenues] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const venuesPerPage = 10;
 
   useEffect(() => {
     const getVenues = async () => {
@@ -29,6 +34,7 @@ const GetVenues = () => {
         const data = await fetchVenues();
         setVenues(data.data);
         setFilteredVenues(data.data);
+        setVisibleVenues(data.data.slice(0, venuesPerPage));
       } catch (error) {
         console.error('Error fetching venues', error);
       } finally {
@@ -106,6 +112,19 @@ const GetVenues = () => {
     }
 
     setFilteredVenues(filtered);
+    setVisibleVenues(filtered.slice(0, currentPage * venuesPerPage));
+  };
+
+  const loadMoreVenues = () => {
+    setLoadMoreLoading(true);
+    setTimeout(() => {
+      setCurrentPage((prevPage) => {
+        const nextPage = prevPage + 1;
+        setVisibleVenues(filteredVenues.slice(0, nextPage * venuesPerPage));
+        setLoadMoreLoading(false);
+        return nextPage;
+      });
+    }, 1000);
   };
 
   return (
@@ -119,10 +138,21 @@ const GetVenues = () => {
       <div className="my-4 flex flex-wrap justify-center gap-4 px-5">
         {loading ? (
           <Loader />
-        ) : filteredVenues.length > 0 ? (
-          filteredVenues.map((venue) => (
-            <VenueCard key={venue.id} venue={venue} />
-          ))
+        ) : visibleVenues.length > 0 ? (
+          <>
+            {visibleVenues.map((venue) => (
+              <VenueCard key={venue.id} venue={venue} />
+            ))}
+            {visibleVenues.length < filteredVenues.length && (
+              <BaseButton
+                onClick={loadMoreVenues}
+                disabled={loadMoreLoading}
+                className="mt-4"
+              >
+                {loadMoreLoading ? 'Loading...' : 'Load More'}
+              </BaseButton>
+            )}
+          </>
         ) : (
           <p>No results found.</p>
         )}
