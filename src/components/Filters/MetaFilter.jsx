@@ -17,17 +17,19 @@ const MetaFilter = ({ onMetaChange, meta }) => {
   };
 
   return (
-    <div className="flex flex-col space-y-2">
+    <div className="mt-4 flex flex-col space-y-2">
       {Object.keys(currentMeta).map((key) => (
-        <label key={key} className="flex items-center">
+        <label key={key} className="flex items-center space-x-3">
           <input
             type="checkbox"
             name={key}
             checked={currentMeta[key]}
             onChange={handleCheckboxChange}
-            className="mr-2"
+            className="size-5"
           />
-          {key.charAt(0).toUpperCase() + key.slice(1)}
+          <span className="text-lg">
+            {key.charAt(0).toUpperCase() + key.slice(1)}
+          </span>
         </label>
       ))}
     </div>

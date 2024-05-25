@@ -46,14 +46,14 @@ const FilterDropdown = ({ onFilterChange }) => {
       <div className="flex items-center">
         <button
           onClick={toggleDropdown}
-          className="inline-flex w-full justify-between rounded-md border border-grey bg-light px-4 py-2 text-sm font-medium text-blue shadow-lg hover:bg-lightBlueGrey focus:outline-none focus:ring-2 focus:ring-lightGreen focus:ring-offset-2"
+          className="inline-flex w-full justify-between rounded-md border border-grey bg-light px-4 py-2 text-sm font-medium text-blue shadow-lg hover:border-lightGreen focus:outline-none focus:ring-2 focus:ring-lightGreen focus:ring-offset-2"
         >
           {isOpen ? 'Close filter' : 'Open filter'}
           <Icon name="filter" className="ml-2 text-xl text-primary" />
         </button>
       </div>
       {isOpen && (
-        <div className="absolute z-40 mt-2 rounded-md border border-grey bg-light p-4 shadow-lg">
+        <div className="absolute z-40 mt-2 w-full rounded-md border border-grey bg-light p-4 shadow-lg">
           <MaxGuestsFilter
             onGuestsChange={handleGuestsChange}
             guestCount={guestCount}

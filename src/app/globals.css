@@ -38,3 +38,7 @@ h1 {
   color: white !important;
   pointer-events: none;
 }
+
+.react-datepicker__month-container {
+  width: 100%;
+}
