@@ -76,11 +76,13 @@ const MyVenuesDisplay = ({ profile }) => {
   }, [profile]);
 
   const openEditModal = (venue) => {
+    document.body.classList.add('body-lock');
     setCurrentVenue(venue);
     setEditModalVisible(true);
   };
 
   const handleModalClose = () => {
+    document.body.classList.remove('body-lock');
     setEditModalVisible(false);
     setCurrentVenue(null);
   };

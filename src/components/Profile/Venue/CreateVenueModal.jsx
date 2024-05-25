@@ -160,28 +160,36 @@ const CreateVenueModal = ({ onClose, onSave, onAddVenue }) => {
         <form onSubmit={handleSubmit} className="mx-10 flex flex-col space-y-4">
           <h2>Create New Venue</h2>
 
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Venue Name (max 50 characters)"
-            required
-            maxLength={50}
-            className={inputStyles}
-          />
-          <span className="text-end">{nameCharCount}/50</span>
+          <div className="flex flex-col">
+            <label htmlFor="name">Venue Name (max 50 characters)</label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              maxLength={50}
+              className={inputStyles}
+            />
+            <span className="text-end">{nameCharCount}/50</span>
+          </div>
 
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            placeholder="Description (max 1000 characters"
-            required
-            maxLength={1000}
-            className={inputStyles}
-          />
-          <span className="text-end">{descriptionCharCount}/1000</span>
+          <div className="flex flex-col">
+            <label htmlFor="description">
+              Description (max 1000 characters)
+            </label>
+            <textarea
+              name="description"
+              id="description"
+              value={formData.description}
+              onChange={handleChange}
+              required
+              maxLength={1000}
+              className={inputStyles}
+            />
+            <span className="text-end">{descriptionCharCount}/1000</span>
+          </div>
 
           <h2>Images</h2>
           {formData.images.map((image, index) => (
@@ -223,26 +231,35 @@ const CreateVenueModal = ({ onClose, onSave, onAddVenue }) => {
               Save Image
             </BaseButton>
           </div>
-          <input
-            type="number"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            placeholder="Enter the price (Max 10 000 NOK)"
-            required
-            max={10000}
-            className={inputStyles}
-          />
-          <input
-            type="number"
-            name="maxGuests"
-            value={formData.maxGuests}
-            onChange={handleChange}
-            placeholder="Maximum Guests"
-            min={1}
-            required
-            className={inputStyles}
-          />
+
+          <div className="flex flex-col">
+            <label htmlFor="price">Price (Max 10 000 NOK)</label>
+            <input
+              type="number"
+              name="price"
+              id="price"
+              value={formData.price}
+              onChange={handleChange}
+              required
+              max={10000}
+              className={inputStyles}
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label htmlFor="maxGuests">Maximum Guests</label>
+            <input
+              type="number"
+              name="maxGuests"
+              id="maxGuests"
+              value={formData.maxGuests}
+              onChange={handleChange}
+              required
+              min={1}
+              className={inputStyles}
+            />
+          </div>
+
           <div>
             <label>
               <input
@@ -281,47 +298,68 @@ const CreateVenueModal = ({ onClose, onSave, onAddVenue }) => {
               Pets Allowed
             </label>
           </div>
-          <input
-            type="text"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            placeholder="Address"
-            className={inputStyles}
-          />
-          <input
-            type="text"
-            name="city"
-            value={formData.city}
-            onChange={handleChange}
-            placeholder="City (required)"
-            required
-            className={inputStyles}
-          />
-          <input
-            type="text"
-            name="zip"
-            value={formData.zip}
-            onChange={handleChange}
-            placeholder="ZIP Code"
-            className={inputStyles}
-          />
-          <input
-            type="text"
-            name="country"
-            value={formData.country}
-            onChange={handleChange}
-            placeholder="Country"
-            className={inputStyles}
-          />
-          <input
-            type="text"
-            name="continent"
-            value={formData.continent}
-            onChange={handleChange}
-            placeholder="Continent"
-            className={inputStyles}
-          />
+
+          <div className="flex flex-col">
+            <label htmlFor="address">Address</label>
+            <input
+              type="text"
+              name="address"
+              id="address"
+              value={formData.address}
+              onChange={handleChange}
+              className={inputStyles}
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label htmlFor="city">City (required)</label>
+            <input
+              type="text"
+              name="city"
+              id="city"
+              value={formData.city}
+              onChange={handleChange}
+              required
+              className={inputStyles}
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label htmlFor="zip">ZIP Code</label>
+            <input
+              type="text"
+              name="zip"
+              id="zip"
+              value={formData.zip}
+              onChange={handleChange}
+              className={inputStyles}
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label htmlFor="country">Country</label>
+            <input
+              type="text"
+              name="country"
+              id="country"
+              value={formData.country}
+              onChange={handleChange}
+              className={inputStyles}
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label htmlFor="continent">Continent</label>
+            <input
+              type="text"
+              name="continent"
+              id="continent"
+              value={formData.continent}
+              onChange={handleChange}
+              className={inputStyles}
+            />
+          </div>
+
           <div className="mt-6 flex justify-end">
             <BaseButton
               type="submit"
