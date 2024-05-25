@@ -1,52 +1,60 @@
+'use client';
 import React, { useEffect, useState } from 'react';
 import ImageCarousel from '@/components/ImageCarousel/ImageCarousel';
 import { Icon } from '@/utils/icons';
 import EditVenueModal from './EditVenueModal';
 import BaseButton from '@/components/BaseButton/BaseButton';
 import { API_URL } from '@/utils/api/api';
+import Loader from '@/components/Loader/Loader';
 
 const MyVenuesDisplay = ({ profile }) => {
   const [venues, setVenues] = useState([]);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [currentVenue, setCurrentVenue] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const bookingsPerPage = 3;
 
-  useEffect(() => {
-    const fetchBookingsForVenue = async (venueId, retries = 3) => {
-      try {
-        const response = await fetch(
-          `${API_URL}/holidaze/venues/${venueId}?_bookings=true`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`,
-              'X-Noroff-API-Key': localStorage.getItem('apiKey'),
-            },
-          }
-        );
-
-        if (!response.ok) {
-          if (retries > 0) {
-            console.log(
-              `Retrying fetch for venue ${venueId}. Retries left: ${retries}`
-            );
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            return await fetchBookingsForVenue(venueId, retries - 1);
-          } else {
-            throw new Error(`Failed to fetch bookings for venue ${venueId}`);
-          }
+  const fetchBookingsForVenue = async (venueId, retries = 3) => {
+    try {
+      const response = await fetch(
+        `${API_URL}/holidaze/venues/${venueId}?_bookings=true`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'X-Noroff-API-Key': localStorage.getItem('apiKey'),
+          },
         }
+      );
 
-        const data = await response.json();
-        return data.data.bookings || [];
-      } catch (error) {
-        console.error(error);
-        return [];
+      if (!response.ok) {
+        if (retries > 0) {
+          console.log(
+            `Retrying fetch for venue ${venueId}. Retries left: ${retries}`
+          );
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          return await fetchBookingsForVenue(venueId, retries - 1);
+        } else {
+          throw new Error(`Failed to fetch bookings for venue ${venueId}`);
+        }
       }
-    };
 
-    const fetchBookings = async () => {
-      if (profile && profile.venues) {
+      const data = await response.json();
+      console.log(`Fetched bookings for venue ${venueId}:`, data);
+      return data.data.bookings || [];
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  };
+
+  const fetchBookings = async () => {
+    setLoading(true);
+    setError(null);
+
+    if (profile && profile.venues) {
+      try {
         const updatedVenues = await Promise.all(
           profile.venues.map(async (venue) => {
             const bookings = await fetchBookingsForVenue(venue.id);
@@ -54,9 +62,16 @@ const MyVenuesDisplay = ({ profile }) => {
           })
         );
         setVenues(updatedVenues);
+        console.log('Updated venues with bookings:', updatedVenues);
+      } catch (error) {
+        setError('Failed to fetch bookings for some venues.');
+      } finally {
+        setLoading(false);
       }
-    };
+    }
+  };
 
+  useEffect(() => {
     fetchBookings();
   }, [profile]);
 
@@ -71,10 +86,14 @@ const MyVenuesDisplay = ({ profile }) => {
   };
 
   const handleSaveComplete = (updatedVenueData) => {
-    const updatedVenues = venues.map((venue) =>
-      venue.id === updatedVenueData.id ? updatedVenueData : venue
+    setVenues((prevVenues) =>
+      prevVenues.map((venue) =>
+        venue.id === updatedVenueData.id
+          ? { ...venue, ...updatedVenueData }
+          : venue
+      )
     );
-    setVenues(updatedVenues);
+    handleModalClose();
   };
 
   const handleDeleteComplete = (venueId) => {
@@ -84,54 +103,8 @@ const MyVenuesDisplay = ({ profile }) => {
     handleModalClose();
   };
 
-  const getFutureBookings = (bookings) => {
-    if (!Array.isArray(bookings)) {
-      return [];
-    }
-
-    const now = new Date();
-    const nowDateOnly = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate()
-    );
-    const futureBookings = bookings.filter((booking) => {
-      const dateFrom = new Date(booking.dateFrom);
-      const dateTo = new Date(booking.dateTo);
-
-      if (dateFrom > dateTo) {
-        console.error(
-          `Booking ID ${booking.id} has dateFrom after dateTo. Correcting dates.`
-        );
-        [booking.dateFrom, booking.dateTo] = [booking.dateTo, booking.dateFrom];
-      }
-
-      const bookingDateToDateOnly = new Date(
-        dateTo.getFullYear(),
-        dateTo.getMonth(),
-        dateTo.getDate()
-      );
-      const isFutureBooking = bookingDateToDateOnly >= nowDateOnly;
-      return isFutureBooking;
-    });
-
-    const uniqueBookings = [];
-    const bookingMap = new Map();
-    for (const booking of futureBookings) {
-      const key = `${booking.dateFrom}-${booking.dateTo}-${booking.customer.name}`;
-      if (!bookingMap.has(key)) {
-        bookingMap.set(key, true);
-        uniqueBookings.push(booking);
-      }
-    }
-
-    return uniqueBookings.sort(
-      (a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)
-    );
-  };
-
   const totalBookings = venues.reduce(
-    (total, venue) => total + getFutureBookings(venue.bookings).length,
+    (total, venue) => total + (venue.bookings ? venue.bookings.length : 0),
     0
   );
   const totalPages = Math.ceil(totalBookings / bookingsPerPage);
@@ -144,6 +117,14 @@ const MyVenuesDisplay = ({ profile }) => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
+  }
+
   if (!venues.length) {
     return <p>You have no venues</p>;
   }
@@ -152,10 +133,10 @@ const MyVenuesDisplay = ({ profile }) => {
     <div className="mx-4 flex flex-col">
       <h2 className="my-4">My Venues (Venue Manager)</h2>
       {venues.map((venue, index) => {
-        const futureBookings = getFutureBookings(venue.bookings);
+        const bookings = venue.bookings || [];
         const startIndex = (currentPage - 1) * bookingsPerPage;
         const endIndex = startIndex + bookingsPerPage;
-        const currentBookings = futureBookings.slice(startIndex, endIndex);
+        const currentBookings = bookings.slice(startIndex, endIndex);
 
         return (
           <div key={index} className="my-4 flex flex-col rounded p-2 shadow-md">
@@ -212,7 +193,7 @@ const MyVenuesDisplay = ({ profile }) => {
                 ) : (
                   <p>No bookings for this venue.</p>
                 )}
-                {totalPages > 1 && (
+                {bookings.length > bookingsPerPage && (
                   <div className="mt-2 flex items-center justify-between">
                     <button
                       onClick={handlePreviousPage}

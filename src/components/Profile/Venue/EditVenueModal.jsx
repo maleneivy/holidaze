@@ -22,8 +22,6 @@ const EditVenueModal = ({
     zip: '',
     country: '',
     continent: '',
-    lat: '',
-    lng: '',
     currentImage: { url: '', alt: '' },
   });
   const [isSaving, setIsSaving] = useState(false);
@@ -49,8 +47,6 @@ const EditVenueModal = ({
         zip: venue.location?.zip || '',
         country: venue.location?.country || '',
         continent: venue.location?.continent || '',
-        lat: venue.location?.lat || '',
-        lng: venue.location?.lng || '',
         currentImage: { url: '', alt: '' },
       });
     }
@@ -88,8 +84,6 @@ const EditVenueModal = ({
         zip: formData.zip,
         country: formData.country,
         continent: formData.continent,
-        lat: parseFloat(formData.lat),
-        lng: parseFloat(formData.lng),
       },
     };
 
@@ -379,22 +373,6 @@ const EditVenueModal = ({
             value={formData.continent}
             onChange={handleChange}
             placeholder="Continent"
-            className={inputStyles}
-          />
-          <input
-            type="number"
-            name="lat"
-            value={formData.lat}
-            onChange={handleChange}
-            placeholder="Latitude"
-            className={inputStyles}
-          />
-          <input
-            type="number"
-            name="lng"
-            value={formData.lng}
-            onChange={handleChange}
-            placeholder="Longitude"
             className={inputStyles}
           />
           <BaseButton
