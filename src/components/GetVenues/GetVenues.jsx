@@ -124,12 +124,15 @@ const GetVenues = () => {
 
   return (
     <div>
-      <SearchComponent
-        onSearchResults={handleSearchChange}
-        onSearchClear={() => handleSearchChange('')}
-      />
-      <DateFilter onDateChange={handleDateChange} />
-      <FilterDropdown onFilterChange={handleFilterChange} />
+      <div className="mx-auto my-10 flex max-w-96 flex-col gap-4">
+        <h1>Find your next Holidaze home</h1>
+        <SearchComponent
+          onSearchResults={handleSearchChange}
+          onSearchClear={() => handleSearchChange('')}
+        />
+        <DateFilter onDateChange={handleDateChange} />
+        <FilterDropdown onFilterChange={handleFilterChange} />
+      </div>
       <div className="my-4 flex flex-wrap justify-center gap-4 px-5">
         {loading ? (
           <Loader />

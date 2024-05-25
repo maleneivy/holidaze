@@ -16,15 +16,15 @@ const SearchComponent = ({ onSearchResults, onSearchClear }) => {
   };
 
   return (
-    <div className="mb-4 flex flex-col items-center">
+    <>
       <input
         type="text"
         value={searchTerm}
         onChange={handleSearch}
         placeholder="Search by name or description..."
-        className="my-2 w-full max-w-md rounded p-2 shadow-md"
+        className="inline-flex w-full justify-between rounded-md border border-grey bg-light px-4 py-2 text-sm font-medium text-blue shadow-lg hover:bg-lightBlueGrey focus:outline-none focus:ring-2 focus:ring-lightGreen focus:ring-offset-2"
       />
-    </div>
+    </>
   );
 };
 

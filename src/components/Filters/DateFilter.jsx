@@ -13,6 +13,10 @@ const DateFilter = ({ onDateChange }) => {
     setStartDate(start);
     setEndDate(end);
     onDateChange(start, end);
+
+    if (start && end) {
+      setIsOpen(false);
+    }
   };
 
   const toggleCalendar = () => {
@@ -28,17 +32,12 @@ const DateFilter = ({ onDateChange }) => {
       <div className="flex items-center">
         <button
           onClick={toggleCalendar}
-          className="inline-flex w-full justify-between rounded-md border border-grey bg-light px-4 py-2 text-sm font-medium text-blue shadow-sm hover:bg-lightBlueGrey focus:outline-none focus:ring-2 focus:ring-lightGreen focus:ring-offset-2"
+          className="inline-flex w-full justify-between rounded-md border border-grey bg-light px-4 py-2 text-sm font-medium text-blue shadow-lg hover:bg-lightBlueGrey focus:outline-none focus:ring-2 focus:ring-lightGreen focus:ring-offset-2"
         >
           {startDate && endDate
             ? `${formatDate(startDate)} - ${formatDate(endDate)}`
             : 'Choose Dates'}
-        </button>
-        <button
-          onClick={toggleCalendar}
-          className="ml-2 inline-flex items-center rounded-md border border-grey bg-light px-3 py-2 text-sm font-medium text-blue shadow-sm hover:bg-lightBlueGrey focus:outline-none focus:ring-2 focus:ring-lightGreen focus:ring-offset-2"
-        >
-          <Icon name="calendar" className="text-xl text-primary" />
+          <Icon name="calendar" className="ml-2 text-xl text-primary" />
         </button>
       </div>
       {isOpen && (
