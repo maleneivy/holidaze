@@ -362,7 +362,7 @@ const ProfilePage = ({ params }) => {
                                     <div className="mt-4">
                                       <button
                                         type="submit"
-                                        className="mt-2 rounded bg-green-500 px-4 py-1 text-white hover:bg-green-400"
+                                        className="hover:bg-green mt-2 rounded bg-primary px-4 py-1 text-light"
                                       >
                                         Save
                                       </button>

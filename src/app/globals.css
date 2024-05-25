@@ -34,11 +34,33 @@ h1 {
 }
 
 .booked {
-  background-color: red !important;
-  color: white !important;
+  @apply bg-red text-light;
+
   pointer-events: none;
 }
 
 .react-datepicker__month-container {
   width: 100%;
+
+  .react-datepicker__header {
+    @apply bg-lightBlueGrey;
+  }
+
+  .react-datepicker__day:hover {
+    @apply bg-lightGreen text-darkBlue;
+  }
+
+  .react-datepicker__day--selected,
+  .react-datepicker__day--in-range,
+  .react-datepicker__day--in-selecting-range {
+    @apply rounded bg-primary text-light;
+  }
+
+  .react-datepicker__day--booked {
+    @apply text-darkGrey bg-lightRed;
+  }
+
+  .react-datepicker__day {
+    @apply px-4 py-2 sm:p-2;
+  }
 }

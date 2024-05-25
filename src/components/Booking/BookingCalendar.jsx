@@ -53,6 +53,7 @@ const BookingCalendar = ({ bookings, onDateChange }) => {
         inline
         minDate={new Date()}
         dayClassName={(date) => (isDateBooked(date) ? 'booked' : undefined)}
+        monthsShown={window.innerWidth >= 768 ? 2 : 1}
       />
     </div>
   );

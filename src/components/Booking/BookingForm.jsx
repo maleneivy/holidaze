@@ -47,14 +47,14 @@ const BookingForm = ({
   return (
     <form onSubmit={handleSubmit} className="mt-4">
       <div>
-        <label>Guests:</label>
+        <label>Guests: </label>
         <input
           type="number"
           value={guests}
           onChange={(e) => setGuests(Number(e.target.value))}
           min="1"
           max={maxGuests}
-          className="ml-2 rounded border px-2"
+          className="w-full rounded border px-4 py-2 md:w-auto"
         />
       </div>
       {selectedDateRange && (

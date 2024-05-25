@@ -200,7 +200,7 @@ const SpecificVenueDisplay = ({ images, venue }) => {
               selectedDates={selectedDates}
             />
           ) : isOwner ? (
-            <div class>
+            <div className="my-2 rounded border border-lightBlueGrey bg-creme p-4 shadow-inner">
               <h3 className="mt-4 font-bold">Bookings</h3>
               {currentBookings.length > 0 ? (
                 <ul>
