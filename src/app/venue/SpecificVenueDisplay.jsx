@@ -130,6 +130,10 @@ const SpecificVenueDisplay = ({ images, venue }) => {
     endIndex
   );
 
+  const horizontalLineStyles = `
+  my-4
+  `;
+
   return (
     <>
       {showConfirmation && (
@@ -156,22 +160,24 @@ const SpecificVenueDisplay = ({ images, venue }) => {
           <ImageCarousel images={images} screenSize="desktop" />
         </div>
       )}
-      <div className="mt-8">
+      <div className="mx-8 mt-8 sm:mx-10">
         <div>
           <h1 className="max-h-10 overflow-hidden truncate text-base font-bold">
             {venue.name}
           </h1>
         </div>
         <div>
-          <p className="overflow-hidden truncate">
+          <p className="break-words">
             {venue.location.country}, {venue.location.city}
           </p>
           <p>Max guests: {venue.maxGuests}</p>
           <p>Owner: {venue.owner.name}</p>
           <p>Price: {venue.price} per night</p>
         </div>
+        <hr className={horizontalLineStyles} />
         <OffersDisplay offers={venue.meta} />
-        <div>
+        <hr className={horizontalLineStyles} />
+        <div className="my-2">
           <h2 className="font-bold">Description</h2>
           {venue.description.length > 0 ? (
             <p className="overflow-hidden truncate">{venue.description}</p>
@@ -179,8 +185,9 @@ const SpecificVenueDisplay = ({ images, venue }) => {
             <p>There are no description provided for this venue.</p>
           )}
         </div>
-        <div>
-          <h2 className="font-bold">Calendar</h2>
+        <hr className={horizontalLineStyles} />
+        <div className="my-2">
+          <h2 className="mb-2 font-bold">Calendar</h2>
           <BookingCalendar
             bookings={bookings}
             onDateChange={handleDateChange}
@@ -193,7 +200,7 @@ const SpecificVenueDisplay = ({ images, venue }) => {
               selectedDates={selectedDates}
             />
           ) : isOwner ? (
-            <div>
+            <div class>
               <h3 className="mt-4 font-bold">Bookings</h3>
               {currentBookings.length > 0 ? (
                 <ul>
@@ -247,15 +254,16 @@ const SpecificVenueDisplay = ({ images, venue }) => {
             <p>Please log in to make a booking.</p>
           )}
         </div>
-        <div>
+        <hr className={horizontalLineStyles} />
+        <div className="my-2">
           <h2 className="font-bold">Location</h2>
           {venue.location.address ? (
-            <p className="overflow-hidden truncate">{venue.location.address}</p>
+            <p className="break-words">{venue.location.address}</p>
           ) : (
             <p>No address provided</p>
           )}
           {venue.location.city ? (
-            <p className="overflow-hidden truncate">{venue.location.city}</p>
+            <p className="break-words">{venue.location.city}</p>
           ) : (
             <p>No city provided</p>
           )}

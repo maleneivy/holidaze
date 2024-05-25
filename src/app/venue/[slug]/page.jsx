@@ -16,8 +16,10 @@ const SpecificVenuePage = async ({ params }) => {
   return (
     <div>
       <Breadcrumb />
-      <div className="mx-auto my-5 max-w-4xl">
-        <SpecificVenueDisplay images={images} venue={venue} />
+      <div className="mx-6">
+        <div className="mx-auto my-5 max-w-6xl">
+          <SpecificVenueDisplay images={images} venue={venue} />
+        </div>
       </div>
     </div>
   );
