@@ -12,7 +12,7 @@ const EditVenueModal = ({
     description: '',
     images: [],
     price: '',
-    maxGuests: '',
+    maxGuests: 1,
     wifi: false,
     parking: false,
     breakfast: false,
@@ -24,6 +24,8 @@ const EditVenueModal = ({
     continent: '',
     currentImage: { url: '', alt: '' },
   });
+  const [nameCharCount, setNameCharCount] = useState(0);
+  const [descriptionCharCount, setDescriptionCharCount] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -37,7 +39,7 @@ const EditVenueModal = ({
         description: venue.description || '',
         images: Array.isArray(venue.media) ? venue.media : [],
         price: venue.price || '',
-        maxGuests: venue.maxGuests || '',
+        maxGuests: venue.maxGuests || 1,
         wifi: venue.meta?.wifi || false,
         parking: venue.meta?.parking || false,
         breakfast: venue.meta?.breakfast || false,
@@ -49,11 +51,19 @@ const EditVenueModal = ({
         continent: venue.location?.continent || '',
         currentImage: { url: '', alt: '' },
       });
+      setNameCharCount(venue.name?.length || 0);
+      setDescriptionCharCount(venue.description?.length || 0);
     }
   }, [venue]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (name === 'name') {
+      setNameCharCount(value.length);
+    }
+    if (name === 'description') {
+      setDescriptionCharCount(value.length);
+    }
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -66,6 +76,24 @@ const EditVenueModal = ({
     e.preventDefault();
     setIsSaving(true);
     setError('');
+
+    if (formData.maxGuests < 1) {
+      alert('Maximum Guests must be at least 1.');
+      setIsSaving(false);
+      return;
+    }
+
+    if (formData.price > 10000) {
+      alert('Price cannot be greater than 10,000.');
+      setIsSaving(false);
+      return;
+    }
+
+    if (!Number.isInteger(parseInt(formData.price, 10))) {
+      alert('Price must be a whole number.');
+      setIsSaving(false);
+      return;
+    }
 
     const submitData = {
       ...formData,
@@ -209,23 +237,38 @@ const EditVenueModal = ({
         <form onSubmit={handleSubmit} className="mx-10 flex flex-col space-y-4">
           <h2>Edit Venue</h2>
           <p>{venue.id}</p>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Venue Name"
-            required
-            className={inputStyles}
-          />
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            placeholder="Description"
-            required
-            className={inputStyles}
-          />
+
+          <div className="flex flex-col">
+            <label htmlFor="name">Venue Name (max 50 characters)</label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              maxLength={50}
+              className={inputStyles}
+            />
+            <span className="text-end">{nameCharCount}/50</span>
+          </div>
+
+          <div className="flex flex-col">
+            <label htmlFor="description">
+              Description (max 1000 characters)
+            </label>
+            <textarea
+              name="description"
+              id="description"
+              value={formData.description}
+              onChange={handleChange}
+              required
+              maxLength={1000}
+              className={inputStyles}
+            />
+            <span className="text-end">{descriptionCharCount}/1000</span>
+          </div>
+
           <h2>Images</h2>
           {formData.images.length > 0 ? (
             formData.images.map((image, index) => (
@@ -279,24 +322,35 @@ const EditVenueModal = ({
               Add Image
             </BaseButton>
           </div>
-          <input
-            type="number"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            placeholder="Price"
-            required
-            className={inputStyles}
-          />
-          <input
-            type="number"
-            name="maxGuests"
-            value={formData.maxGuests}
-            onChange={handleChange}
-            placeholder="Maximum Guests"
-            required
-            className={inputStyles}
-          />
+
+          <div className="flex flex-col">
+            <label htmlFor="price">Price (Max 10 000 NOK)</label>
+            <input
+              type="number"
+              name="price"
+              id="price"
+              value={formData.price}
+              onChange={handleChange}
+              required
+              max={10000}
+              className={inputStyles}
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label htmlFor="maxGuests">Maximum Guests</label>
+            <input
+              type="number"
+              name="maxGuests"
+              id="maxGuests"
+              value={formData.maxGuests}
+              onChange={handleChange}
+              required
+              min={1}
+              className="my-2 w-20 rounded border border-lightBlueGrey p-2 shadow"
+            />
+          </div>
+
           <div>
             <label>
               <input
@@ -335,46 +389,68 @@ const EditVenueModal = ({
               Pets Allowed
             </label>
           </div>
-          <input
-            type="text"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            placeholder="Address"
-            className={inputStyles}
-          />
-          <input
-            type="text"
-            name="city"
-            value={formData.city}
-            onChange={handleChange}
-            placeholder="City"
-            className={inputStyles}
-          />
-          <input
-            type="text"
-            name="zip"
-            value={formData.zip}
-            onChange={handleChange}
-            placeholder="ZIP Code"
-            className={inputStyles}
-          />
-          <input
-            type="text"
-            name="country"
-            value={formData.country}
-            onChange={handleChange}
-            placeholder="Country"
-            className={inputStyles}
-          />
-          <input
-            type="text"
-            name="continent"
-            value={formData.continent}
-            onChange={handleChange}
-            placeholder="Continent"
-            className={inputStyles}
-          />
+
+          <div className="flex flex-col">
+            <label htmlFor="address">Address</label>
+            <input
+              type="text"
+              name="address"
+              id="address"
+              value={formData.address}
+              onChange={handleChange}
+              className={inputStyles}
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label htmlFor="city">City (required)</label>
+            <input
+              type="text"
+              name="city"
+              id="city"
+              value={formData.city}
+              onChange={handleChange}
+              required
+              className={inputStyles}
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label htmlFor="zip">ZIP Code</label>
+            <input
+              type="text"
+              name="zip"
+              id="zip"
+              value={formData.zip}
+              onChange={handleChange}
+              className={inputStyles}
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label htmlFor="country">Country</label>
+            <input
+              type="text"
+              name="country"
+              id="country"
+              value={formData.country}
+              onChange={handleChange}
+              className={inputStyles}
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label htmlFor="continent">Continent</label>
+            <input
+              type="text"
+              name="continent"
+              id="continent"
+              value={formData.continent}
+              onChange={handleChange}
+              className={inputStyles}
+            />
+          </div>
+
           <BaseButton
             type="submit"
             className="bg-blue-600 hover:bg-blue-700 rounded px-6 py-2 font-semibold"
@@ -384,7 +460,7 @@ const EditVenueModal = ({
           </BaseButton>
           {successMessage && <p className="bg-lightGreen">{successMessage}</p>}
         </form>
-        <div className="my-4">
+        <div className="my-4 text-end">
           <BaseButton
             type="button"
             onClick={confirmDelete}

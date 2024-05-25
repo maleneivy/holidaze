@@ -9,7 +9,7 @@ const CreateVenueModal = ({ onClose, onSave, onAddVenue }) => {
     description: '',
     images: [],
     price: '',
-    maxGuests: '',
+    maxGuests: 1,
     wifi: false,
     parking: false,
     breakfast: false,
@@ -19,13 +19,19 @@ const CreateVenueModal = ({ onClose, onSave, onAddVenue }) => {
     zip: '',
     country: '',
     continent: '',
-    lat: '',
-    lng: '',
     currentImage: { url: '', alt: '' },
   });
+  const [nameCharCount, setNameCharCount] = useState(0);
+  const [descriptionCharCount, setDescriptionCharCount] = useState(0);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (name === 'name') {
+      setNameCharCount(value.length);
+    }
+    if (name === 'description') {
+      setDescriptionCharCount(value.length);
+    }
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -76,6 +82,22 @@ const CreateVenueModal = ({ onClose, onSave, onAddVenue }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { currentImage, ...submitData } = formData;
+
+    if (submitData.maxGuests < 1) {
+      alert('Maximum Guests must be at least 1.');
+      return;
+    }
+
+    if (submitData.price > 10000) {
+      alert('Price cannot be greater than 10,000.');
+      return;
+    }
+
+    if (!Number.isInteger(parseInt(submitData.price, 10))) {
+      alert('Price must be a whole number.');
+      return;
+    }
+
     const venueData = {
       ...submitData,
       price: parseInt(submitData.price),
@@ -93,8 +115,6 @@ const CreateVenueModal = ({ onClose, onSave, onAddVenue }) => {
         zip: submitData.zip,
         country: submitData.country,
         continent: submitData.continent,
-        lat: parseFloat(submitData.lat),
-        lng: parseFloat(submitData.lng),
       },
     };
 
@@ -139,23 +159,30 @@ const CreateVenueModal = ({ onClose, onSave, onAddVenue }) => {
         </span>
         <form onSubmit={handleSubmit} className="mx-10 flex flex-col space-y-4">
           <h2>Create New Venue</h2>
+
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
-            placeholder="Venue Name"
+            placeholder="Venue Name (max 50 characters)"
             required
+            maxLength={50}
             className={inputStyles}
           />
+          <span className="text-end">{nameCharCount}/50</span>
+
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
-            placeholder="Description"
+            placeholder="Description (max 1000 characters"
             required
+            maxLength={1000}
             className={inputStyles}
           />
+          <span className="text-end">{descriptionCharCount}/1000</span>
+
           <h2>Images</h2>
           {formData.images.map((image, index) => (
             <div key={index} className="my-2 flex items-center justify-between">
@@ -201,8 +228,9 @@ const CreateVenueModal = ({ onClose, onSave, onAddVenue }) => {
             name="price"
             value={formData.price}
             onChange={handleChange}
-            placeholder="Price"
+            placeholder="Enter the price (Max 10 000 NOK)"
             required
+            max={10000}
             className={inputStyles}
           />
           <input
@@ -211,6 +239,7 @@ const CreateVenueModal = ({ onClose, onSave, onAddVenue }) => {
             value={formData.maxGuests}
             onChange={handleChange}
             placeholder="Maximum Guests"
+            min={1}
             required
             className={inputStyles}
           />
@@ -265,7 +294,8 @@ const CreateVenueModal = ({ onClose, onSave, onAddVenue }) => {
             name="city"
             value={formData.city}
             onChange={handleChange}
-            placeholder="City"
+            placeholder="City (required)"
+            required
             className={inputStyles}
           />
           <input
@@ -290,22 +320,6 @@ const CreateVenueModal = ({ onClose, onSave, onAddVenue }) => {
             value={formData.continent}
             onChange={handleChange}
             placeholder="Continent"
-            className={inputStyles}
-          />
-          <input
-            type="number"
-            name="lat"
-            value={formData.lat}
-            onChange={handleChange}
-            placeholder="Latitude"
-            className={inputStyles}
-          />
-          <input
-            type="number"
-            name="lng"
-            value={formData.lng}
-            onChange={handleChange}
-            placeholder="Longitude"
             className={inputStyles}
           />
           <div className="mt-6 flex justify-end">

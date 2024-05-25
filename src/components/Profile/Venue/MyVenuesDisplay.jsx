@@ -159,7 +159,7 @@ const MyVenuesDisplay = ({ profile }) => {
               </button>
             </div>
             <div className="border-lightBlueGrey p-4">
-              <h3>{venue.name}</h3>
+              <h3 className="break-words">{venue.name}</h3>
               <p>Price: {venue.price}</p>
               <p>Max Guests: {venue.maxGuests}</p>
               <p>
