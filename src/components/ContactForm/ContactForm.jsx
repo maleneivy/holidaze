@@ -40,7 +40,7 @@ const ContactForm = () => {
       return false;
     }
     if (body.length > 200) {
-      setBodyError('Body cannot be no more than 200 characters');
+      setBodyError('Body cannot be more than 200 characters');
       return false;
     }
     setBodyError('');
@@ -78,49 +78,51 @@ const ContactForm = () => {
 
   return (
     <div className="mx-2 flex justify-center">
-      <div className="my-10 max-w-128 p-20 shadow-lg">
+      <div className="my-4 max-w-128 p-20 shadow-lg sm:my-10">
         <form
           onSubmit={handleSubmit}
           className="md:w-0-auto mx-2 flex w-72 flex-col"
         >
           <h1>Contact</h1>
-          <div>
+          <div className="flex flex-col">
+            <label htmlFor="fullName">Full Name</label>
             <input
               type="text"
+              id="fullName"
               value={fullName}
               placeholder="Enter full name (min 3 characters)"
               className="my-2 w-full rounded p-2 shadow-md"
               onChange={(e) => setFullName(e.target.value)}
             />
-            <div>
-              {fullNameError && (
-                <span className="text-red">{fullNameError}</span>
-              )}
-            </div>
+            {fullNameError && <span className="text-red">{fullNameError}</span>}
           </div>
-          <div>
+          <div className="flex flex-col">
+            <label htmlFor="email">Email</label>
             <input
               type="email"
+              id="email"
               value={email}
               placeholder="Enter your email"
               className="my-2 w-full rounded p-2 shadow-md"
               onChange={(e) => setEmail(e.target.value)}
             />
-            <div>
-              {emailError && <span className="text-red">{emailError}</span>}
-            </div>
+            {emailError && <span className="text-red">{emailError}</span>}
           </div>
-          <div>
+          <div className="flex flex-col">
+            <label htmlFor="subject">Subject</label>
             <input
               type="text"
+              id="subject"
               value={subject}
               placeholder="Enter the subject"
               className="my-2 w-full rounded p-2 shadow-md"
               onChange={(e) => setSubject(e.target.value)}
             />
           </div>
-          <div>
+          <div className="flex flex-col">
+            <label htmlFor="body">Message</label>
             <textarea
+              id="body"
               placeholder="Enter your message (max 200 characters)"
               value={body}
               className="mt-2 h-48 w-full rounded p-2 shadow-md"
@@ -130,22 +132,20 @@ const ContactForm = () => {
             <div className="mb-4 text-right text-sm text-blue">
               {charCount}/200
             </div>
-            <div>
-              {bodyError && (
-                <span className="text-center text-red">{bodyError}</span>
-              )}
-            </div>
+            {bodyError && (
+              <span className="mb-4 text-center  text-red">{bodyError}</span>
+            )}
           </div>
           <div className="text-end">
             <BaseButton type="submit">Send</BaseButton>
           </div>
           {showSuccessMessage && (
             <div className="mt-4 text-center text-green-500">
-              Message sent successfully!
+              Message has been sent successfully!
             </div>
           )}
           {showErrorMessage && (
-            <div className="mt-4 text-center text-red">
+            <div className="mb-4text-center mt-4 text-red">
               Please correct the errors above.
             </div>
           )}
