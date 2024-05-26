@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import BaseButton from '@/components/BaseButton/BaseButton';
 
+/**
+ * EditVenueModal component for editing a venue's details.
+ * @component
+ * @param {Object} props - The properties passed to the component.
+ * @param {Object} props.venue - The venue to be edited.
+ * @param {Function} props.onClose - The function to close the modal.
+ * @param {Function} props.onSaveComplete - The function to handle saving completion.
+ * @param {Function} props.onDeleteComplete - The function to handle deletion completion.
+ * @returns {JSX.Element} - The rendered component.
+ */
 const EditVenueModal = ({
   venue,
   onClose,
@@ -56,6 +66,10 @@ const EditVenueModal = ({
     }
   }, [venue]);
 
+  /**
+   * Handle input changes for text fields.
+   * @param {Object} e - The event object.
+   */
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === 'name') {
@@ -67,11 +81,19 @@ const EditVenueModal = ({
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  /**
+   * Handle checkbox changes.
+   * @param {Object} e - The event object.
+   */
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
     setFormData((prev) => ({ ...prev, [name]: checked }));
   };
 
+  /**
+   * Handle form submission to save the venue.
+   * @param {Object} e - The event object.
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSaving(true);
@@ -145,10 +167,16 @@ const EditVenueModal = ({
     }
   };
 
+  /**
+   * Confirm deletion of the venue.
+   */
   const confirmDelete = () => {
     setShowConfirmDelete(true);
   };
 
+  /**
+   * Handle venue deletion.
+   */
   const handleDelete = async () => {
     setShowConfirmDelete(false);
     setIsDeleting(true);
@@ -179,6 +207,10 @@ const EditVenueModal = ({
     }
   };
 
+  /**
+   * Handle addition of a new image.
+   * @param {Object} event - The event object.
+   */
   const handleImageAddition = (event) => {
     event.preventDefault();
     if (formData.images.length >= 10) {
@@ -208,6 +240,10 @@ const EditVenueModal = ({
     }
   };
 
+  /**
+   * Handle removal of an image.
+   * @param {number} index - The index of the image to remove.
+   */
   const handleRemoveImage = (index) => {
     setFormData((prev) => {
       const updatedImages = prev.images.filter((_, i) => i !== index);
@@ -215,6 +251,10 @@ const EditVenueModal = ({
     });
   };
 
+  /**
+   * Handle changes to the current image inputs.
+   * @param {Object} e - The event object.
+   */
   const handleImageChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
