@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useEffect, useState } from 'react';
 import ImageCarousel from '@/components/ImageCarousel/ImageCarousel';
 import { Icon } from '@/utils/icons';
@@ -7,6 +8,13 @@ import BaseButton from '@/components/BaseButton/BaseButton';
 import { API_URL } from '@/utils/api/api';
 import Loader from '@/components/Loader/Loader';
 
+/**
+ * MyVenuesDisplay component for displaying and managing a user's venues.
+ * @component
+ * @param {Object} props - The properties passed to the component.
+ * @param {Object} props.profile - The profile data containing the user's venues.
+ * @returns {JSX.Element} - The rendered component.
+ */
 const MyVenuesDisplay = ({ profile }) => {
   const [venues, setVenues] = useState([]);
   const [editModalVisible, setEditModalVisible] = useState(false);
@@ -16,6 +24,12 @@ const MyVenuesDisplay = ({ profile }) => {
   const [error, setError] = useState(null);
   const bookingsPerPage = 3;
 
+  /**
+   * Fetch bookings for a specific venue with retries.
+   * @param {string} venueId - The ID of the venue.
+   * @param {number} [retries=3] - The number of retries in case of failure.
+   * @returns {Promise<Array>} - The bookings for the venue.
+   */
   const fetchBookingsForVenue = async (venueId, retries = 3) => {
     try {
       const response = await fetch(
@@ -49,6 +63,9 @@ const MyVenuesDisplay = ({ profile }) => {
     }
   };
 
+  /**
+   * Fetch bookings for all venues in the profile.
+   */
   const fetchBookings = async () => {
     setLoading(true);
     setError(null);
@@ -75,18 +92,29 @@ const MyVenuesDisplay = ({ profile }) => {
     fetchBookings();
   }, [profile]);
 
+  /**
+   * Open the edit modal for a specific venue.
+   * @param {Object} venue - The venue to edit.
+   */
   const openEditModal = (venue) => {
     document.body.classList.add('body-lock');
     setCurrentVenue(venue);
     setEditModalVisible(true);
   };
 
+  /**
+   * Handle the closure of the edit modal.
+   */
   const handleModalClose = () => {
     document.body.classList.remove('body-lock');
     setEditModalVisible(false);
     setCurrentVenue(null);
   };
 
+  /**
+   * Handle the completion of saving a venue.
+   * @param {Object} updatedVenueData - The updated venue data.
+   */
   const handleSaveComplete = (updatedVenueData) => {
     setVenues((prevVenues) =>
       prevVenues.map((venue) =>
@@ -98,6 +126,10 @@ const MyVenuesDisplay = ({ profile }) => {
     handleModalClose();
   };
 
+  /**
+   * Handle the completion of deleting a venue.
+   * @param {string} venueId - The ID of the venue to delete.
+   */
   const handleDeleteComplete = (venueId) => {
     console.log('Deleting venue with ID:', venueId);
     const filteredVenues = venues.filter((venue) => venue.id !== venueId);
