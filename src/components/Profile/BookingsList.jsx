@@ -131,7 +131,7 @@ const BookingsList = ({
                           <div className="mt-4">
                             <button
                               type="submit"
-                              className="hover:bg-green mt-2 rounded bg-primary px-4 py-1 text-light"
+                              className="mt-2 rounded bg-primary px-4 py-1 text-light hover:bg-lightGreen hover:text-darkBlue"
                             >
                               Save
                             </button>
