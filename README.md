@@ -1,13 +1,17 @@
 # Project Exam - Holidaze
+
 ### An exam for planning, designing and build a modern front-end accommodation booking application with React.
 
-### API 
-This project covers the front-end application for the Noroff API, which is managed by an existing application. 
+### API
+
+This project covers the front-end application for the Noroff API, which is managed by an existing application.
 
 ## Requirements
-The Holidaze has not specified the design or UX for the site, but has a list of required features for user stories, which has two aspects to it: 
-* The customer-facing side
-* The admin-facing site
+
+The Holidaze has not specified the design or UX for the site, but has a list of required features for user stories, which has two aspects to it:
+
+- The customer-facing side
+- The admin-facing site
 
 ### User stories
 
@@ -28,34 +32,61 @@ The Holidaze has not specified the design or UX for the site, but has a list of 
 15. A registered user may logout
 
 ## Planning
-This project is planned using [GitHub Projects](https://github.com/users/maleneivy/projects/4). 
+
+This project is planned using [GitHub Projects](https://github.com/users/maleneivy/projects/4).
 
 ## Design
-The prototype for the design: Not done yet
+
+The prototype for the design: [Adobe XD - Holidaze design](https://xd.adobe.com/view/e1e61ba9-1e63-476d-b0b4-4f79defc72c7-b4b5/)
+
+## Deployment
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/79f9db85-f8b6-433e-9ae0-a85e7647b280/deploy-status)](https://app.netlify.com/sites/holidaze-exam24/deploys)
+
+This application is deployed on Netlify and you can visit the site using this [link](https://holidaze-exam24.netlify.app/).
 
 ## Installation
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-### Getting Started
+1. Clone repo
 
-First, run the development server:
+```
+git clone https://github.com/maleneivy/holidaze.git
+```
+
+2. Install dependencies
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
+
+3. Run development
+
+```
+npm run dev
+```
+
+4. Visit `http://localhost:3000` to see project locally.
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### This project uses App Router
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+You can start editing the page by modifying `page.jsx` that is inside the `app` folder.
+
+## Dependencies & devDependencies used in the application
+
+| Dependency       | Version |
+| ---------------- | ------- |
+| Next             | ^14.2.3 |
+| React            | ^18.3   |
+| React Datepicker | ^6.9.0  |
+| React DOM        | ^18.3   |
+| React Icons      | ^5.2.0  |
+| TailwindCSS      | ^3.4.1  |
+| EsLint           | ^8      |
+| Prettier         | ^3.2.5  |
 
 ## Learn More
 
