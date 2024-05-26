@@ -177,6 +177,7 @@ const CreateVenueModal = ({ onClose, onSave, onAddVenue }) => {
   };
 
   const inputStyles = 'my-2 rounded p-2 shadow border border-lightBlueGrey';
+  const checkBoxStyles = 'size-7 rounded shadow-lg mr-2';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-blue bg-opacity-50">
@@ -290,40 +291,44 @@ const CreateVenueModal = ({ onClose, onSave, onAddVenue }) => {
             />
           </div>
 
-          <div>
-            <label>
+          <div className="mt-4 flex flex-col gap-4">
+            <label className="flex w-fit items-center">
               <input
                 type="checkbox"
                 name="wifi"
                 checked={formData.wifi}
                 onChange={handleCheckboxChange}
+                className={checkBoxStyles}
               />
               WiFi
             </label>
-            <label>
+            <label className="flex w-fit items-center">
               <input
                 type="checkbox"
                 name="parking"
                 checked={formData.parking}
                 onChange={handleCheckboxChange}
+                className={checkBoxStyles}
               />
               Parking
             </label>
-            <label>
+            <label className="flex w-fit items-center">
               <input
                 type="checkbox"
                 name="breakfast"
                 checked={formData.breakfast}
                 onChange={handleCheckboxChange}
+                className={checkBoxStyles}
               />
               Breakfast
             </label>
-            <label>
+            <label className="flex w-fit items-center">
               <input
                 type="checkbox"
                 name="pets"
                 checked={formData.pets}
                 onChange={handleCheckboxChange}
+                className={checkBoxStyles}
               />
               Pets Allowed
             </label>
