@@ -21,7 +21,27 @@ body {
 }
 
 h1 {
-  @apply font-serif;
+  @apply font-serif text-3xl sm:text-4xl;
+}
+
+h2 {
+  @apply font-serif text-2xl sm:text-3xl md:text-4xl;
+}
+
+h3 {
+  @apply font-serif text-xl md:text-3xl;
+}
+
+p {
+  @apply font-sans text-base sm:text-lg;
+}
+
+input,
+textarea,
+label,
+a,
+button {
+  @apply font-sans text-lg;
 }
 
 .logo {
@@ -54,10 +74,6 @@ h1 {
   .react-datepicker__day--in-range,
   .react-datepicker__day--in-selecting-range {
     @apply rounded bg-primary text-light;
-  }
-
-  .react-datepicker__day--booked {
-    @apply text-darkGrey bg-lightRed;
   }
 
   .react-datepicker__day {

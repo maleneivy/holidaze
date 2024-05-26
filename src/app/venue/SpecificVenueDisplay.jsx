@@ -210,7 +210,7 @@ const SpecificVenueDisplay = ({ images, venue }) => {
         <OffersDisplay offers={venue.meta} />
         <hr className={horizontalLineStyles} />
         <div className="my-2">
-          <h2 className="font-bold">Description</h2>
+          <h2>Description</h2>
           {venue.description.length > 0 ? (
             <p className="overflow-hidden truncate">{venue.description}</p>
           ) : (
@@ -219,7 +219,7 @@ const SpecificVenueDisplay = ({ images, venue }) => {
         </div>
         <hr className={horizontalLineStyles} />
         <div className="my-2">
-          <h2 className="mb-2 font-bold">Calendar</h2>
+          <h2 className="mb-2">Calendar</h2>
           <BookingCalendar
             bookings={bookings}
             onDateChange={handleDateChange}
@@ -233,7 +233,7 @@ const SpecificVenueDisplay = ({ images, venue }) => {
             />
           ) : isOwner ? (
             <div className="my-2 rounded border border-lightBlueGrey bg-creme p-4 shadow-inner">
-              <h3 className="mt-4 font-bold">Bookings</h3>
+              <h3 className="mt-4">Bookings</h3>
               {currentBookings.length > 0 ? (
                 <ul>
                   {currentBookings.map((booking) => (
@@ -288,7 +288,7 @@ const SpecificVenueDisplay = ({ images, venue }) => {
         </div>
         <hr className={horizontalLineStyles} />
         <div className="my-2">
-          <h2 className="font-bold">Location</h2>
+          <h2>Location</h2>
           {venue.location.address ? (
             <p className="break-words">{venue.location.address}</p>
           ) : (

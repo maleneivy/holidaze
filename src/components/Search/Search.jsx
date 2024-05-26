@@ -22,7 +22,7 @@ const SearchComponent = ({ onSearchResults, onSearchClear }) => {
         value={searchTerm}
         onChange={handleSearch}
         placeholder="Search by name or description..."
-        className="inline-flex w-full justify-between rounded-md border border-grey bg-light px-4 py-2 text-sm font-medium text-blue shadow-lg hover:border-lightGreen focus:outline-none focus:ring-2 focus:ring-lightGreen focus:ring-offset-2"
+        className="inline-flex w-full justify-between rounded-md border border-grey bg-light px-4 py-2 text-blue shadow-lg hover:border-lightGreen focus:outline-none focus:ring-2 focus:ring-lightGreen focus:ring-offset-2"
       />
     </>
   );

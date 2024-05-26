@@ -3,6 +3,12 @@ module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
     extend: {
+      fontSize: {
+        '2xl': '22px',
+        '3xl': '25px',
+        '4xl': '30px',
+        '5xl': '35px',
+      },
       maxWidth: {
         custom: '1290px',
       },

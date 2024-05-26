@@ -12,7 +12,7 @@ const OffersDisplay = ({ offers }) => {
 
   return (
     <div>
-      <h2 className="font-bold">Offers</h2>
+      <h2>Offers</h2>
       {availableOffers.length > 0 ? (
         <ul className="grid grid-cols-2 gap-x-4 gap-y-2">
           {availableOffers.map((offer, index) => (

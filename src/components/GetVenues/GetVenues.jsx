@@ -124,8 +124,10 @@ const GetVenues = () => {
 
   return (
     <div>
+      <h1 className="my-6 text-center sm:my-10">
+        Find your next Holidaze home
+      </h1>
       <div className="mx-auto my-10 flex max-w-96 flex-col gap-4">
-        <h1>Find your next Holidaze home</h1>
         <SearchComponent
           onSearchResults={handleSearchChange}
           onSearchClear={() => handleSearchChange('')}

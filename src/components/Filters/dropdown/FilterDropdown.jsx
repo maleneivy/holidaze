@@ -46,10 +46,10 @@ const FilterDropdown = ({ onFilterChange }) => {
       <div className="flex items-center">
         <button
           onClick={toggleDropdown}
-          className="inline-flex w-full justify-between rounded-md border border-grey bg-light px-4 py-2 text-sm font-medium text-blue shadow-lg hover:border-lightGreen focus:outline-none focus:ring-2 focus:ring-lightGreen focus:ring-offset-2"
+          className="inline-flex w-full justify-between rounded-md border border-grey bg-light px-4 py-2 text-blue shadow-lg hover:border-lightGreen focus:outline-none focus:ring-2 focus:ring-lightGreen focus:ring-offset-2"
         >
           {isOpen ? 'Close filter' : 'Open filter'}
-          <Icon name="filter" className="ml-2 text-xl text-primary" />
+          <Icon name="filter" className="ml-2 text-2xl text-primary" />
         </button>
       </div>
       {isOpen && (
