@@ -54,7 +54,6 @@ function RegistrationForm() {
       }
 
       const result = await response.json();
-      console.log('Registration successful:', result);
       setFormData({ name: '', email: '', password: '', venueManager: false });
       setSuccess('Registration was successfull. You may now log in');
       setLoading(false);

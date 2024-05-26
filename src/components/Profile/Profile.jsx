@@ -142,7 +142,6 @@ const ProfileDisplay = ({ params }) => {
    * @param {Object} newVenueData - The new venue data.
    */
   const handleSaveNewVenue = async (newVenueData) => {
-    console.log(newVenueData);
     setIsCreating(false);
   };
 

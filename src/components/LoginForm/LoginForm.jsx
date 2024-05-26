@@ -34,8 +34,6 @@ function LoginForm() {
         throw new Error(account.errors[0].message || 'Failed to login');
       }
 
-      console.log('Login successful:', account);
-
       const apiKeyResponse = await createApiKey(account.data.accessToken);
       const apiKey = await apiKeyResponse.json();
 

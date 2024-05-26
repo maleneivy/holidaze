@@ -44,9 +44,6 @@ const MyVenuesDisplay = ({ profile }) => {
 
       if (!response.ok) {
         if (retries > 0) {
-          console.log(
-            `Retrying fetch for venue ${venueId}. Retries left: ${retries}`
-          );
           await new Promise((resolve) => setTimeout(resolve, 1000));
           return await fetchBookingsForVenue(venueId, retries - 1);
         } else {
@@ -55,7 +52,6 @@ const MyVenuesDisplay = ({ profile }) => {
       }
 
       const data = await response.json();
-      console.log(`Fetched bookings for venue ${venueId}:`, data);
       return data.data.bookings || [];
     } catch (error) {
       console.error(error);
@@ -79,7 +75,6 @@ const MyVenuesDisplay = ({ profile }) => {
           })
         );
         setVenues(updatedVenues);
-        console.log('Updated venues with bookings:', updatedVenues);
       } catch (error) {
         setError('Failed to fetch bookings for some venues.');
       } finally {
@@ -131,7 +126,6 @@ const MyVenuesDisplay = ({ profile }) => {
    * @param {string} venueId - The ID of the venue to delete.
    */
   const handleDeleteComplete = (venueId) => {
-    console.log('Deleting venue with ID:', venueId);
     const filteredVenues = venues.filter((venue) => venue.id !== venueId);
     setVenues(filteredVenues);
     handleModalClose();
