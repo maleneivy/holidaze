@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import BaseButton from '@/components/BaseButton/BaseButton';
 
 /**
@@ -42,6 +42,9 @@ const EditVenueModal = ({
   const [successMessage, setSuccessMessage] = useState('');
   const [error, setError] = useState('');
 
+  const priceRef = useRef(null);
+  const maxGuestsRef = useRef(null);
+
   useEffect(() => {
     if (venue) {
       setFormData({
@@ -65,6 +68,23 @@ const EditVenueModal = ({
       setDescriptionCharCount(venue.description?.length || 0);
     }
   }, [venue]);
+
+  // Add event listeners to prevent scroll on number input fields
+  useEffect(() => {
+    const preventScroll = (e) => e.preventDefault();
+
+    const priceInput = priceRef.current;
+    const maxGuestsInput = maxGuestsRef.current;
+
+    if (priceInput) priceInput.addEventListener('wheel', preventScroll);
+    if (maxGuestsInput) maxGuestsInput.addEventListener('wheel', preventScroll);
+
+    return () => {
+      if (priceInput) priceInput.removeEventListener('wheel', preventScroll);
+      if (maxGuestsInput)
+        maxGuestsInput.removeEventListener('wheel', preventScroll);
+    };
+  }, []);
 
   /**
    * Handle input changes for text fields.
@@ -375,6 +395,7 @@ const EditVenueModal = ({
               required
               max={10000}
               className={inputStyles}
+              ref={priceRef}
             />
           </div>
 
@@ -389,6 +410,7 @@ const EditVenueModal = ({
               required
               min={1}
               className="my-2 w-20 rounded border border-lightBlueGrey p-2 shadow"
+              ref={maxGuestsRef}
             />
           </div>
 

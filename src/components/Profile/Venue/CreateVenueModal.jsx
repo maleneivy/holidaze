@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import BaseButton from '@/components/BaseButton/BaseButton';
 
 /**
@@ -32,6 +32,26 @@ const CreateVenueModal = ({ onClose, onSave, onAddVenue }) => {
   });
   const [nameCharCount, setNameCharCount] = useState(0);
   const [descriptionCharCount, setDescriptionCharCount] = useState(0);
+
+  const priceRef = useRef(null);
+  const maxGuestsRef = useRef(null);
+
+  // Add event listeners to prevent scroll on number input fields
+  useEffect(() => {
+    const preventScroll = (e) => e.preventDefault();
+
+    const priceInput = priceRef.current;
+    const maxGuestsInput = maxGuestsRef.current;
+
+    if (priceInput) priceInput.addEventListener('wheel', preventScroll);
+    if (maxGuestsInput) maxGuestsInput.addEventListener('wheel', preventScroll);
+
+    return () => {
+      if (priceInput) priceInput.removeEventListener('wheel', preventScroll);
+      if (maxGuestsInput)
+        maxGuestsInput.removeEventListener('wheel', preventScroll);
+    };
+  }, []);
 
   /**
    * Handle input changes for text fields.
@@ -274,6 +294,7 @@ const CreateVenueModal = ({ onClose, onSave, onAddVenue }) => {
               required
               max={10000}
               className={inputStyles}
+              ref={priceRef}
             />
           </div>
 
@@ -288,6 +309,7 @@ const CreateVenueModal = ({ onClose, onSave, onAddVenue }) => {
               required
               min={1}
               className={inputStyles}
+              ref={maxGuestsRef}
             />
           </div>
 
