@@ -60,7 +60,7 @@ const EditProfileModal = ({ profile, onClose, onSave }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-blue bg-opacity-50">
-      <div className="relative w-full max-w-2xl rounded-lg bg-light p-5 shadow-lg">
+      <div className="modal-content relative w-full max-w-2xl rounded-lg bg-light p-5 shadow-lg">
         <span
           className="absolute right-0 top-0 m-4 cursor-pointer text-3xl leading-none hover:text-grey"
           onClick={onClose}
@@ -73,7 +73,7 @@ const EditProfileModal = ({ profile, onClose, onSave }) => {
             <div className="flex flex-col">
               <label htmlFor="bio">
                 Bio:{' '}
-                <span className="text-darkGrey text-sm">
+                <span className="text-sm text-darkGrey">
                   (max 160 characters)
                 </span>
               </label>
@@ -118,7 +118,7 @@ const EditProfileModal = ({ profile, onClose, onSave }) => {
             <div className="flex flex-col">
               <label htmlFor="avatarAlt">
                 Avatar Alt Text:{' '}
-                <span className="text-darkGrey text-sm">
+                <span className="text-sm text-darkGrey">
                   (max 120 characters)
                 </span>
               </label>
@@ -155,7 +155,7 @@ const EditProfileModal = ({ profile, onClose, onSave }) => {
             <div className="flex flex-col">
               <label htmlFor="bannerAlt">
                 Banner Alt Text:{' '}
-                <span className="text-darkGrey text-sm">
+                <span className="text-sm text-darkGrey">
                   (max 120 characters)
                 </span>
               </label>
