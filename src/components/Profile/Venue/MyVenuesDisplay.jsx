@@ -154,12 +154,16 @@ const MyVenuesDisplay = ({ profile }) => {
   }
 
   if (!venues.length) {
-    return <p>You have no venues</p>;
+    return (
+      <p className="-p-4 mx-4 my-6 rounded p-10 text-center shadow-lg">
+        You have no venues
+      </p>
+    );
   }
 
   return (
     <div className="mx-4 flex flex-col">
-      <h2 className="my-4">My Venues (Venue Manager)</h2>
+      <h2 className="my-4">My Venues</h2>
       {venues.map((venue, index) => {
         const bookings = venue.bookings || [];
         const startIndex = (currentPage - 1) * bookingsPerPage;

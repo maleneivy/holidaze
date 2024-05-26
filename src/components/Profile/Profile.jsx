@@ -280,11 +280,10 @@ const ProfileDisplay = ({ params }) => {
               handleCreateVenue={handleCreateVenue}
             />
             <ProfileInfo profile={profile} />
-            <hr className="mx-4 border-lightBlueGrey" />
+            <hr className="mx-4 my-2 border-lightBlueGrey" />
             {profile.venueManager && (
               <>
                 <MyVenuesDisplay profile={profile} />
-                <hr className="mx-4 border-lightBlueGrey" />
               </>
             )}
             <BookingsList
@@ -298,7 +297,6 @@ const ProfileDisplay = ({ params }) => {
               confirmDeleteBooking={confirmDeleteBooking}
               setIsEditingBooking={setIsEditingBooking}
             />
-            <hr className="mx-4 border-lightBlueGrey" />
           </>
         )}
       </div>
