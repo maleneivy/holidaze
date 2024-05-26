@@ -200,7 +200,14 @@ const SpecificVenueDisplay = ({ images, venue }) => {
         </div>
         <div>
           <p className="break-words">
-            {venue.location.country}, {venue.location.city}
+            Country:{' '}
+            {venue.location.country
+              ? venue.location.country
+              : 'No country provided'}
+          </p>
+          <p className="break-words">
+            City:{' '}
+            {venue.location.city ? venue.location.city : 'No city provided'}
           </p>
           <p>Max guests: {venue.maxGuests}</p>
           <p>Owner: {venue.owner.name}</p>

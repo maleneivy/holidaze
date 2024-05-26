@@ -42,6 +42,16 @@ const VenueCard = ({ venue }) => {
             <h3 className="max-h-10 overflow-hidden truncate text-base">
               {venue.name}
             </h3>
+            <p className="text-base">
+              Country:{' '}
+              {venue.location.country
+                ? venue.location.country
+                : 'no country provided'}
+            </p>
+            <p className="text-base">
+              City:{' '}
+              {venue.location.city ? venue.location.city : 'no city provided'}
+            </p>
             <p className="text-sm">Max guests: {venue.maxGuests}</p>
             <div>
               <ul className="mt-4 flex flex-col">
