@@ -1,3 +1,11 @@
+/**
+ * ProfileHeader component for displaying the profile header information.
+ * @component
+ * @param {Object} props - The properties passed to the component.
+ * @param {Object} props.profile - The profile data.
+ * @param {Function} props.handleEdit - Function to handle profile editing.
+ * @param {Function} props.handleCreateVenue - Function to handle creating a new venue.
+ */
 const ProfileHeader = ({ profile, handleEdit, handleCreateVenue }) => (
   <div className="flex flex-col items-center">
     <img
