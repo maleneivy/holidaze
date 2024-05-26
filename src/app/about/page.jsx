@@ -1,6 +1,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+export const metadata = {
+  title: 'About Page',
+  description: 'About page on Holidaze',
+};
+
 const About = () => {
   return (
     <div className="about-page mx-10 p-4">

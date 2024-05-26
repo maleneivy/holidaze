@@ -1,6 +1,11 @@
 import Breadcrumb from '@/components/BreadCrumb/BreadCrumb';
 import LoginForm from '@/components/LoginForm/LoginForm';
 
+export const metadata = {
+  title: 'Login Page',
+  description: 'Login page on Holidaze',
+};
+
 const Login = () => {
   return (
     <div>

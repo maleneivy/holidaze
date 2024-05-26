@@ -4,6 +4,11 @@ const {
   default: RegistrationForm,
 } = require('@/components/RegisterForm/RegisterForm');
 
+export const metadata = {
+  title: 'Regstration Page Page',
+  description: 'Registration page on Holidaze',
+};
+
 const RegisterPage = () => {
   return (
     <div>

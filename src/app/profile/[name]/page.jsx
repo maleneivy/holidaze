@@ -1,11 +1,10 @@
 import ProfileDisplay from '@/components/Profile/Profile';
 
-const ProfilePage = ({ params }) => {
-  return (
-    <>
-      <ProfileDisplay params={params} />
-    </>
-  );
+export const metadata = {
+  title: 'Profile Page',
+  description: 'User profile on Holidaze',
 };
 
-export default ProfilePage;
+export default function ProfilePage({ params }) {
+  return <ProfileDisplay params={params} />;
+}

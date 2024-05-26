@@ -2,6 +2,11 @@ import { fetchSingleVenue } from '@/utils/api/api';
 import SpecificVenueDisplay from '../SpecificVenueDisplay';
 import Breadcrumb from '@/components/BreadCrumb/BreadCrumb';
 
+export const metadata = {
+  title: 'Venue Page',
+  description: 'Specific venue page on Holidaze',
+};
+
 const SpecificVenuePage = async ({ params }) => {
   const { slug } = params;
 
