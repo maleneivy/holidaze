@@ -10,6 +10,12 @@ import BookingsList from './BookingsList';
 import React, { useEffect, useState } from 'react';
 import { API_URL } from '@/utils/api/api';
 
+/**
+ * ProfileDisplay component for displaying the profile page.
+ * @component
+ * @param {Object} params - Parameters passed to the component.
+ * @param {string} params.name - The name of the profile.
+ */
 const ProfileDisplay = ({ params }) => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -22,6 +28,9 @@ const ProfileDisplay = ({ params }) => {
   const [bookingToDelete, setBookingToDelete] = useState(null);
   const [editErrors, setEditErrors] = useState({});
 
+  /**
+   * Fetch the profile data from the API.
+   */
   const fetchProfile = async () => {
     try {
       const profileResponse = await fetch(
@@ -51,27 +60,43 @@ const ProfileDisplay = ({ params }) => {
     fetchProfile();
   }, [params.name]);
 
+  /**
+   * Handle the edit profile action.
+   */
   const handleEdit = () => {
     document.body.classList.add('body-lock');
     setIsEditing(true);
   };
 
+  /**
+   * Close the edit profile modal.
+   */
   const handleCloseEdit = () => {
     document.body.classList.remove('body-lock');
     setIsEditing(false);
     setEditErrors({});
   };
 
+  /**
+   * Handle the create venue action.
+   */
   const handleCreateVenue = () => {
     document.body.classList.add('body-lock');
     setIsCreating(true);
   };
 
+  /**
+   * Close the create venue modal.
+   */
   const handleCloseCreateVenue = () => {
     document.body.classList.remove('body-lock');
     setIsCreating(false);
   };
 
+  /**
+   * Handle saving the updated profile.
+   * @param {Object} updatedProfile - The updated profile data.
+   */
   const handleSave = async (updatedProfile) => {
     try {
       const response = await fetch(
@@ -112,11 +137,19 @@ const ProfileDisplay = ({ params }) => {
     }
   };
 
+  /**
+   * Handle saving the new venue.
+   * @param {Object} newVenueData - The new venue data.
+   */
   const handleSaveNewVenue = async (newVenueData) => {
     console.log(newVenueData);
     setIsCreating(false);
   };
 
+  /**
+   * Add a new venue to the profile.
+   * @param {Object} newVenue - The new venue to add.
+   */
   const addNewVenue = (newVenue) => {
     setProfile((prevProfile) => ({
       ...prevProfile,
@@ -124,6 +157,10 @@ const ProfileDisplay = ({ params }) => {
     }));
   };
 
+  /**
+   * Handle deleting a booking.
+   * @param {number} bookingId - The ID of the booking to delete.
+   */
   const handleDeleteBooking = async (bookingId) => {
     try {
       const response = await fetch(
@@ -148,11 +185,20 @@ const ProfileDisplay = ({ params }) => {
     }
   };
 
+  /**
+   * Handle editing a booking.
+   * @param {Object} booking - The booking to edit.
+   */
   const handleEditBooking = (booking) => {
     setSelectedDates([new Date(booking.dateFrom), new Date(booking.dateTo)]);
     setIsEditingBooking(booking.id);
   };
 
+  /**
+   * Handle updating a booking.
+   * @param {number} bookingId - The ID of the booking to update.
+   * @param {Object} updatedBooking - The updated booking data.
+   */
   const handleUpdateBooking = async (bookingId, updatedBooking) => {
     try {
       const response = await fetch(
@@ -180,20 +226,34 @@ const ProfileDisplay = ({ params }) => {
     }
   };
 
+  /**
+   * Handle changing the selected dates.
+   * @param {Array<Date>} dates - The selected dates.
+   */
   const handleDateChange = (dates) => {
     setSelectedDates(dates);
   };
 
+  /**
+   * Confirm the deletion of a booking.
+   * @param {number} bookingId - The ID of the booking to delete.
+   */
   const confirmDeleteBooking = (bookingId) => {
     setBookingToDelete(bookingId);
     setIsConfirmingDelete(true);
   };
 
+  /**
+   * Cancel the deletion of a booking.
+   */
   const cancelDeleteBooking = () => {
     setBookingToDelete(null);
     setIsConfirmingDelete(false);
   };
 
+  /**
+   * Proceed with the deletion of a booking.
+   */
   const proceedDeleteBooking = () => {
     handleDeleteBooking(bookingToDelete);
     setBookingToDelete(null);
