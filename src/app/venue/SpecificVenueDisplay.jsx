@@ -11,6 +11,14 @@ import { API_URL } from '@/utils/api/api';
 import BookingConfirmation from '@/components/Booking/BookingConfirmation';
 import BaseButton from '@/components/BaseButton/BaseButton';
 
+/**
+ * SpecificVenueDisplay component for displaying detailed information about a specific venue.
+ * @component
+ * @param {Object} props - The properties passed to the component.
+ * @param {Array} props.images - The images related to the venue.
+ * @param {Object} props.venue - The venue data.
+ * @returns {JSX.Element} - The rendered component.
+ */
 const SpecificVenueDisplay = ({ images, venue }) => {
   const { auth } = useAuth();
   const [selectedDates, setSelectedDates] = useState([null, null]);
@@ -20,6 +28,9 @@ const SpecificVenueDisplay = ({ images, venue }) => {
   const bookingsPerPage = 3;
   const isOwner = auth.userName === venue.owner.name;
 
+  /**
+   * Fetch the latest bookings for the venue.
+   */
   const fetchLatestBookings = async () => {
     try {
       const response = await fetch(
@@ -47,10 +58,18 @@ const SpecificVenueDisplay = ({ images, venue }) => {
     fetchLatestBookings();
   }, []);
 
+  /**
+   * Handle date changes in the booking calendar.
+   * @param {Array} dates - The selected dates.
+   */
   const handleDateChange = (dates) => {
     setSelectedDates(dates);
   };
 
+  /**
+   * Handle booking submission.
+   * @param {number} guests - The number of guests.
+   */
   const handleBookingSubmit = async (guests) => {
     const [startDate, endDate] = selectedDates;
 
@@ -86,11 +105,19 @@ const SpecificVenueDisplay = ({ images, venue }) => {
     }
   };
 
+  /**
+   * Handle closing the booking confirmation modal.
+   */
   const handleCloseConfirmation = async () => {
     setShowConfirmation(false);
     await fetchLatestBookings();
   };
 
+  /**
+   * Sort bookings and ensure dateFrom is before dateTo.
+   * @param {Array} bookings - The bookings to sort.
+   * @returns {Array} - The sorted bookings.
+   */
   const getSortedBookings = (bookings) => {
     return bookings
       .map((booking) => {
@@ -104,6 +131,13 @@ const SpecificVenueDisplay = ({ images, venue }) => {
       .sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
   };
 
+  /**
+   * Calculate the total price for a booking.
+   * @param {string} dateFrom - The start date of the booking.
+   * @param {string} dateTo - The end date of the booking.
+   * @param {number} pricePerNight - The price per night of the venue.
+   * @returns {number} - The total price for the booking.
+   */
   const calculateTotalPrice = (dateFrom, dateTo, pricePerNight) => {
     const startDate = new Date(dateFrom);
     const endDate = new Date(dateTo);
@@ -130,9 +164,7 @@ const SpecificVenueDisplay = ({ images, venue }) => {
     endIndex
   );
 
-  const horizontalLineStyles = `
-  my-4
-  `;
+  const horizontalLineStyles = `my-4`;
 
   return (
     <>
