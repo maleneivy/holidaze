@@ -3,6 +3,15 @@
 import React, { useState } from 'react';
 import BaseButton from '@/components/BaseButton/BaseButton';
 
+/**
+ * CreateVenueModal component for creating a new venue.
+ * @component
+ * @param {Object} props - The properties passed to the component.
+ * @param {Function} props.onClose - The function to close the modal.
+ * @param {Function} props.onSave - The function to handle saving the new venue.
+ * @param {Function} props.onAddVenue - The function to handle adding the new venue to the profile.
+ * @returns {JSX.Element} - The rendered component.
+ */
 const CreateVenueModal = ({ onClose, onSave, onAddVenue }) => {
   const [formData, setFormData] = useState({
     name: '',
@@ -24,6 +33,10 @@ const CreateVenueModal = ({ onClose, onSave, onAddVenue }) => {
   const [nameCharCount, setNameCharCount] = useState(0);
   const [descriptionCharCount, setDescriptionCharCount] = useState(0);
 
+  /**
+   * Handle input changes for text fields.
+   * @param {Object} e - The event object.
+   */
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === 'name') {
@@ -35,11 +48,18 @@ const CreateVenueModal = ({ onClose, onSave, onAddVenue }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  /**
+   * Handle checkbox changes.
+   * @param {Object} e - The event object.
+   */
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
     setFormData((prev) => ({ ...prev, [name]: checked }));
   };
 
+  /**
+   * Handle addition of a new image.
+   */
   const handleAddImage = () => {
     if (formData.currentImage.url && formData.currentImage.alt) {
       const img = new Image();
@@ -64,6 +84,10 @@ const CreateVenueModal = ({ onClose, onSave, onAddVenue }) => {
     }
   };
 
+  /**
+   * Handle removal of an image.
+   * @param {number} index - The index of the image to remove.
+   */
   const handleRemoveImage = (index) => {
     setFormData((prev) => ({
       ...prev,
@@ -71,6 +95,10 @@ const CreateVenueModal = ({ onClose, onSave, onAddVenue }) => {
     }));
   };
 
+  /**
+   * Handle changes to the current image inputs.
+   * @param {Object} e - The event object.
+   */
   const handleImageChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -79,6 +107,10 @@ const CreateVenueModal = ({ onClose, onSave, onAddVenue }) => {
     }));
   };
 
+  /**
+   * Handle form submission to create a new venue.
+   * @param {Object} e - The event object.
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { currentImage, ...submitData } = formData;
