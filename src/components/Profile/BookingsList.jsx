@@ -2,6 +2,20 @@ import Link from 'next/link';
 import BaseButton from '@/components/BaseButton/BaseButton';
 import BookingCalendar from '@/components/Booking/BookingCalendar';
 
+/**
+ * BookingsList component for displaying the list of bookings.
+ * @component
+ * @param {Object} props - The properties passed to the component.
+ * @param {Object} props.profile - The profile data.
+ * @param {Array} props.bookings - The list of bookings.
+ * @param {Array<Date>} props.selectedDates - The selected dates for the booking.
+ * @param {number|null} props.isEditingBooking - The ID of the booking being edited.
+ * @param {Function} props.handleEditBooking - Function to handle editing a booking.
+ * @param {Function} props.handleDateChange - Function to handle date changes.
+ * @param {Function} props.handleUpdateBooking - Function to handle updating a booking.
+ * @param {Function} props.confirmDeleteBooking - Function to confirm the deletion of a booking.
+ * @param {Function} props.setIsEditingBooking - Function to set the booking being edited.
+ */
 const BookingsList = ({
   profile,
   bookings,
