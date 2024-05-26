@@ -2,13 +2,13 @@
 import EditProfileModal from '@/components/Profile/EditProfileModal';
 import CreateVenueModal from '@/components/Profile/Venue/CreateVenueModal';
 import MyVenuesDisplay from '@/components/Profile/Venue/MyVenuesDisplay';
-import BookingCalendar from '@/components/Booking/BookingCalendar';
+import Loader from '@/components/Loader/Loader';
+import ConfirmationModal from '@/components/ConfirmationModal/ConfirmationModal';
+import ProfileHeader from './ProfileHeader';
+import ProfileInfo from './ProfileInfo';
+import BookingsList from './BookingsList';
 import React, { useEffect, useState } from 'react';
 import { API_URL } from '@/utils/api/api';
-import Link from 'next/link';
-import Loader from '@/components/Loader/Loader';
-import BaseButton from '@/components/BaseButton/BaseButton';
-import ConfirmationModal from '@/components/ConfirmationModal/ConfirmationModal';
 
 const ProfileDisplay = ({ params }) => {
   const [profile, setProfile] = useState(null);
@@ -213,183 +213,35 @@ const ProfileDisplay = ({ params }) => {
         />
       </div>
       <div className="mx-auto my-20 flex max-w-128 flex-col">
-        <div>
-          {profile && (
-            <>
-              <div className="flex flex-col items-center">
-                <img
-                  src={profile.avatar?.url}
-                  alt={profile.avatar?.alt || 'Profile avatar'}
-                  className="sm:size-42 size-36 rounded-full object-cover md:size-48"
-                />
-                <div className="my-4 flex">
-                  <div>
-                    <a role="button" onClick={handleEdit} className="underline">
-                      Edit Profile
-                    </a>
-                  </div>
-                  {profile.venueManager && (
-                    <div className="ml-10">
-                      <a
-                        role="button"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleCreateVenue();
-                        }}
-                        className="underline"
-                      >
-                        New venue (VM)
-                      </a>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="mx-4 my-6">
-                <p>{profile.name}</p>
-                <p>{profile.email}</p>
-                <h3 className="mb-2 mt-4">Bio</h3>
-                <p className="whitesp break-words">
-                  {profile.bio ? profile.bio : 'No bio provided'}
-                </p>
-              </div>
-              <hr className="mx-4 border-lightBlueGrey" />
-              {profile.venueManager && (
-                <>
-                  <MyVenuesDisplay profile={profile} />
-                  <hr className="mx-4 border-lightBlueGrey" />
-                </>
-              )}
-              <div className="mx-4">
-                <h2 className="my-4">My upcoming bookings</h2>
-                <div className="my-4 flex flex-col space-y-4">
-                  {profile.bookings
-                    .sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom))
-                    .map((booking, index) => {
-                      const totalPrice =
-                        ((new Date(booking.dateTo) -
-                          new Date(booking.dateFrom)) /
-                          (1000 * 60 * 60 * 24)) *
-                        booking.venue.price;
-                      return (
-                        <div
-                          key={index}
-                          className="mt-4 flex flex-col rounded p-4 shadow-md sm:flex-row"
-                        >
-                          <div>
-                            <img
-                              src={
-                                booking.venue.media[0]?.url ||
-                                '/default-image.jpg'
-                              }
-                              alt={booking.venue.media[0]?.alt || 'Venue image'}
-                              className="object-cover sm:size-32"
-                            />
-                          </div>
-                          <div className="ml-4">
-                            <Link
-                              href={{
-                                pathname: `/venue/${booking.venue.id}`,
-                                query: {
-                                  from: 'profile',
-                                  profileName: profile.name,
-                                },
-                              }}
-                            >
-                              <p className="mt-2 max-w-xs overflow-hidden truncate underline hover:font-bold sm:mt-0">
-                                {booking.venue.name}
-                              </p>
-                            </Link>
-                            <p className="max-w-xs overflow-hidden truncate">
-                              {booking.venue.location.city}
-                            </p>
-                            <p className="max-w-xs overflow-hidden truncate">
-                              {booking.venue.location.country}
-                            </p>
-                            <p>
-                              {new Date(booking.dateFrom).toLocaleDateString()}{' '}
-                              - {new Date(booking.dateTo).toLocaleDateString()}
-                            </p>
-                            <p>Guests: {booking.guests}</p>
-                            <p>Total cost: {totalPrice} NOK</p>
-                            <div className="mx-auto mt-4 flex justify-between">
-                              <BaseButton
-                                onClick={() => handleEditBooking(booking)}
-                                className="mr-2 rounded px-4 py-1 text-blue hover:font-bold focus:bg-yellow-100"
-                              >
-                                Edit booking
-                              </BaseButton>
-                              <button
-                                onClick={() => confirmDeleteBooking(booking.id)}
-                                className="rounded bg-lightRed px-4 py-1 text-darkBlue hover:bg-red hover:text-white"
-                              >
-                                Delete booking
-                              </button>
-                            </div>
-                            {isEditingBooking === booking.id && (
-                              <div className="mt-4">
-                                <BookingCalendar
-                                  bookings={profile.bookings}
-                                  onDateChange={handleDateChange}
-                                />
-                                <form
-                                  onSubmit={async (e) => {
-                                    e.preventDefault();
-                                    const updatedBooking = {
-                                      dateFrom: selectedDates[0].toISOString(),
-                                      dateTo: selectedDates[1].toISOString(),
-                                      guests: Number(e.target.guests.value),
-                                    };
-                                    await handleUpdateBooking(
-                                      booking.id,
-                                      updatedBooking
-                                    );
-                                  }}
-                                >
-                                  <div className="flex flex-col">
-                                    <div className="flex items-baseline justify-between">
-                                      <label>
-                                        Guests:
-                                        <input
-                                          type="number"
-                                          name="guests"
-                                          defaultValue={booking.guests}
-                                          min="1"
-                                          max={booking.venue.maxGuests}
-                                          className="ml-2 rounded border px-2"
-                                        />
-                                      </label>
-                                    </div>
-                                    <div className="mt-4">
-                                      <button
-                                        type="submit"
-                                        className="hover:bg-green mt-2 rounded bg-primary px-4 py-1 text-light"
-                                      >
-                                        Save
-                                      </button>
-                                      <button
-                                        type="button"
-                                        onClick={() =>
-                                          setIsEditingBooking(null)
-                                        }
-                                        className="ml-2 mt-2 rounded bg-gray-500 px-4 py-1 text-white hover:bg-gray-400"
-                                      >
-                                        Cancel
-                                      </button>
-                                    </div>
-                                  </div>
-                                </form>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
-                </div>
-              </div>
-              <hr className="mx-4 border-lightBlueGrey" />
-            </>
-          )}
-        </div>
+        {profile && (
+          <>
+            <ProfileHeader
+              profile={profile}
+              handleEdit={handleEdit}
+              handleCreateVenue={handleCreateVenue}
+            />
+            <ProfileInfo profile={profile} />
+            <hr className="mx-4 border-lightBlueGrey" />
+            {profile.venueManager && (
+              <>
+                <MyVenuesDisplay profile={profile} />
+                <hr className="mx-4 border-lightBlueGrey" />
+              </>
+            )}
+            <BookingsList
+              profile={profile}
+              bookings={profile.bookings}
+              selectedDates={selectedDates}
+              isEditingBooking={isEditingBooking}
+              handleEditBooking={handleEditBooking}
+              handleDateChange={handleDateChange}
+              handleUpdateBooking={handleUpdateBooking}
+              confirmDeleteBooking={confirmDeleteBooking}
+              setIsEditingBooking={setIsEditingBooking}
+            />
+            <hr className="mx-4 border-lightBlueGrey" />
+          </>
+        )}
       </div>
       <div className={isEditing || isCreating ? 'blur-sm' : ''}></div>
       {isEditing && (
