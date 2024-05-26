@@ -51,7 +51,7 @@ const Breadcrumb = () => {
   }, [pathname, searchParams, venueName]);
 
   return (
-    <nav className="ml-4 mt-4 flex items-center p-2">
+    <nav className="ml-4 mt-4 flex flex-wrap items-center p-2">
       <Link href="/" className="mr-2 text-blue hover:underline">
         Home
       </Link>
@@ -60,7 +60,7 @@ const Breadcrumb = () => {
           {' / '}
           {index !== breadcrumbItems.length - 1 ? (
             item.name === 'Venue' ? (
-              <span className="text-darkGrey mr-2">{item.name}</span>
+              <span className="mr-2 text-darkGrey">{item.name}</span>
             ) : (
               <Link href={item.href} className="mr-2 text-blue hover:underline">
                 {item.name}
