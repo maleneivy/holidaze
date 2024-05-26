@@ -212,7 +212,7 @@ const SpecificVenueDisplay = ({ images, venue }) => {
         <div className="my-2">
           <h2>Description</h2>
           {venue.description.length > 0 ? (
-            <p className="overflow-hidden truncate">{venue.description}</p>
+            <p className="break-words">{venue.description}</p>
           ) : (
             <p>There are no description provided for this venue.</p>
           )}

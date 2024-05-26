@@ -89,7 +89,7 @@ function RegistrationForm() {
           name="email"
           value={formData.email}
           onChange={handleChange}
-          placeholder="Email"
+          placeholder="user@stud.noroff.no mail"
           required
           className={inputClasses}
         />
@@ -98,7 +98,7 @@ function RegistrationForm() {
           name="password"
           value={formData.password}
           onChange={handleChange}
-          placeholder="Password"
+          placeholder="Password (min 8.characters)"
           required
           className={inputClasses}
         />
